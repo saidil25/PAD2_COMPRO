@@ -15,10 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('title', 255);
             $table->text('description');
-            $table->unsignedBigInteger("author");
+            $table->unsignedBigInteger("author_id");
+            $table->unsignedBigInteger("category_id");
             $table->timestamps();
 
-            $table->foreign('author')->references('id')->on('users');
+            $table->foreign('author_id')->references('id')->on('users');
+            $table->foreign('category_id')->references('id')->on('categories');
         });
     }
 
@@ -27,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('catalog');
+        Schema::dropIfExists('catalogs');
     }
 };
