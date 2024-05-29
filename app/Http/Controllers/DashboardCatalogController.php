@@ -40,7 +40,7 @@ class DashboardCatalogController extends Controller
             $extension = $request->file('file')->extension();
             $result = $fileName.'.'.$extension;
 
-            $request->file('file')->storeAs('image', $result);
+            $request->file('file')->storeAs('public/image', $result);
         }
 
         $request['image'] = $result;

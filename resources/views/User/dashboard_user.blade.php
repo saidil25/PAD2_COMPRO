@@ -4,25 +4,22 @@
 
 <!-- Carousel -->
 <div class="w-full h-auto ">
-    <div class=" relative" x-data="{
-            slides: [
-                {
-                    url: 'https://images.unsplash.com/photo-1594580701468-e5678582b8ce?q=80&w=2970&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                    title: 'Atha Mebel',
-                    body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et massa mi. Aliquam in hendrerit urna. Pellentesque sit amet sapien fringilla, mattis ligula consectetur, ultrices mauris. Maecenas vitae mattis tellus. Nullam quis imperdiet augue. Vestibulum auctor ornare leo, non suscipit magna interdum eu. Curabitur pellentesque nibh nibh, at maximus ante fermentum sit amet. Pellentesque commodo lacus at sodales sodales. Quisque sagittis orci ut diam condimentum, vel euismod erat placerat. In iaculis arcu eros, eget tempus orci facilisis id.'
-                },
-                {
-                    url: 'https://images.unsplash.com/photo-1594026112284-02bb6f3352fe?q=80&w=2970&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                    title: 'Atha Mebel',
-                    body: 'Hayang modol'
-                },
-                {
-                    url: 'https://images.unsplash.com/photo-1557367184-663fba4b8b91?q=80&w=2970&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                    title: 'Atha Mebel',
-                    body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et massa mi. Aliquam in hendrerit urna. Pellentesque sit amet sapien fringilla, mattis ligula consectetur, ultrices mauris. Maecenas vitae mattis tellus. Nullam quis imperdiet augue. Vestibulum auctor ornare leo, non suscipit magna interdum eu. Curabitur pellentesque nibh nibh, at maximus ante fermentum sit amet. Pellentesque commodo lacus at sodales sodales. Quisque sagittis orci ut diam condimentum, vel euismod erat placerat. In iaculis arcu eros, eget tempus orci facilisis id.'
-                }
-            ],
+    <div class="relative" x-data="{
+            slides: [],
             currentIndex: 0,
+            fetchSlides() {
+                fetch('http://127.0.0.1:8000/api/carousel')
+                    .then(response => response.json())
+                    .then(data => {
+                        const baseUrl = 'http://127.0.0.1:8000/storage/image/';
+                        this.slides = data.data.map(slide => ({
+                            url: baseUrl + slide.image,
+                            title: slide.title,
+                            body: ''  // Anda bisa menambahkan body jika ada data tersebut atau biarkan kosong
+                        }));
+                    })
+                    .catch(error => console.error('Error fetching data:', error));
+            },
             prevSlide() {
                 this.currentIndex = (this.currentIndex === 0) ? this.slides.length - 1 : this.currentIndex - 1;
             },
@@ -32,69 +29,63 @@
             goToSlide(index) {
                 this.currentIndex = index;
             }
-        }">
-            <div class=" mx-auto relative" x-init="() => { setInterval(() => nextSlide(), 5000); }">
+        }" x-init="fetchSlides(); setInterval(() => nextSlide(), 5000);">
+            <div class="mx-auto relative">
                 <template x-for="(slide, index) in slides" :key="index">
-                    <div x-show="currentIndex === index" class="w-full h-81 bg-cover bg-center" :style="'background-image: url(\'' + slide.url + '\')'">
-                        <div class="absolute h-81 w-81 flex  justify-center bg-gradient-to-r from-c1 from-60% via-c2  ">
-                            <div class="text-center text-white mt-32">
-                                <h2 class=" text-3xl font-bold mb-2" x-text="slide.title"></h2>
-                                <p x-text="slide.body"></p>
+                    <div x-show="currentIndex === index" class="lg:w-full lg:h-81 lg:bg-cover lg:bg-center md:bg-cover md:bg-center md:h-80 md:w-full sm:bg-cover sm:bg-center sm:w-full sm:h-250" :style="'background-image: url(\'' + slide.url + '\')'">
+                        <div class="lg:absolute lg:h-81 lg:w-81 md:absolute md:w-430 md:h-80 sm:absolute sm:h-250 sm:w-315 flex justify-center bg-gradient-to-r from-c1 from-60% via-c2">
+                            <div class="text-center text-white lg:mt-40 md:mt-16 sm:mt-10">
+                                <h2 class="lg:text-3xl md:text-18 font-bold mb-2" x-text="slide.title"></h2>
+                                <p class="lg:text-17 md:text-10" x-text="slide.body"></p>
                             </div>
                         </div> 
                     </div>
                 </template>
-                <div class="absolute top-1/2 transform -translate-y-1/2 -left-0">
-                    <button @click="prevSlide" class="text-white bg-black bg-opacity-50 rounded-full p-2 focus:outline-none"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg></button>
-                </div>
-                <div class="absolute top-1/2 transform -translate-y-1/2 -right-0">
-                    <button @click="nextSlide" class="text-white bg-black bg-opacity-50 rounded-full p-2 focus:outline-none"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></button>
-                </div>
                 <div class="absolute w-32 items-center justify-center left-1/2 transform -translate-x-1/2 flex space-x-2 px-4">
                     <template x-for="(slide, index) in slides" :key="index">
-                        <button @click="goToSlide(index)" class="flex-1 w-4 h-2 mt-2 mx-2 mb-2 rounded-full overflow-hidden transition-colors duration-200 hover:bg-c1
-                        " :class="{'bg-coklat': index === currentIndex, 'bg-opacity-50': index !== currentIndex}"></button>
+                        <button @click="goToSlide(index)" class="flex-1 w-4 h-2 mt-2 mx-2 mb-2 rounded-full overflow-hidden transition-colors duration-200 hover:bg-c1" :class="{'bg-coklat': index === currentIndex, 'bg-opacity-50': index !== currentIndex}"></button>
                     </template>
                 </div>
             </div>
         </div>
 </div>
 
+
 <!-- Kelebihan -->
 <div id="kelebihan" class="w-full h-auto mt-32 flex flex-col items-center justify-center">
-    <h1 class="text-2xl font-bold text-coklat">KELEBIHAN ATHA MEBEL</h1>
-    <div class="grid grid-cols-2 gap-5 mt-16">
+    <h1 class="lg:text-2xl md:text-18 sm:text-xl font-bold text-coklat">KELEBIHAN ATHA MEBEL</h1>
+    <div class="grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-2 gap-5 mt-16">
     <div class="col-span-2 md:col-span-1 flex justify-center">
-            <a class=" w-card h-card p-6 bg-krem border border-gray-200 rounded-lg shadow flex flex-col justify-center items-center">
-                <img src="../img/like icon.png" class="h-7 w-7 mb-2">
-                <h5 class="mb-2 text-xl font-semibold tracking-tight text-black dark:text-white">Lorem ipsum dolor sit amet consectetur.</h5>
-                <p class="font-normal text-black text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et massa mi. Aliquam in hendrerit urna. Pellentesque sit amet sapien fringilla, mattis ligula consectetur, ultrices mauris. Maecenas vitae mattis tellus..</p>
+            <a class=" lg:w-card lg:h-card md: w-347 md:h-233  w p-6 bg-krem border border-gray-200 rounded-lg shadow flex flex-col justify-center items-center">
+                <img src="../img/like icon.png" class="lg:h-7 lg:w-7 md:h-5 md:w-5 mb-2">
+                <h5 class="mb-2 lg:text-xl md:text-17 sm:text-14 md:text-center font-semibold tracking-tight text-black dark:text-white">Lorem ipsum dolor sit amet consectetur.</h5>
+                <p class="font-normal lg:text-17 md:text-14 sm:text-14 text-black text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et massa mi. Aliquam in hendrerit urna. Pellentesque sit amet sapien fringilla, mattis ligula consectetur, ultrices mauris. Maecenas vitae mattis tellus..</p>
             </a>
         </div>
 
         <div class="col-span-2 md:col-span-1 flex justify-center">
-            <a class=" w-card h-card p-6 bg-krem border border-gray-200 rounded-lg shadow flex flex-col justify-center items-center">
-                <img src="../img/like icon.png" class="h-7 w-7 mb-2">
-                <h5 class="mb-2 text-xl font-semibold tracking-tight text-black dark:text-white">Lorem ipsum dolor sit amet consectetur.</h5>
-                <p class="font-normal text-black text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et massa mi. Aliquam in hendrerit urna. Pellentesque sit amet sapien fringilla, mattis ligula consectetur, ultrices mauris. Maecenas vitae mattis tellus..</p>
-            </a>
-        </div>
-
-
-        <div class="col-span-2 md:col-span-1 flex justify-center">
-            <a class=" w-card h-card p-6 bg-krem border border-gray-200 rounded-lg shadow flex flex-col justify-center items-center">
-                <img src="../img/like icon.png" class="h-7 w-7 mb-2">
-                <h5 class="mb-2 text-xl font-semibold tracking-tight text-black dark:text-white">Lorem ipsum dolor sit amet consectetur.</h5>
-                <p class="font-normal text-black text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et massa mi. Aliquam in hendrerit urna. Pellentesque sit amet sapien fringilla, mattis ligula consectetur, ultrices mauris. Maecenas vitae mattis tellus..</p>
+            <a class=" lg:w-card lg:h-card md: w-347 md:h-233 w p-6 bg-krem border border-gray-200 rounded-lg shadow flex flex-col justify-center items-center">
+                <img src="../img/like icon.png" class="lg:h-7 lg:w-7 md:h-5 md:w-5 mb-2">
+                <h5 class="mb-2 lg:text-xl md:text-17 sm:text-14 md:text-center font-semibold tracking-tight text-black dark:text-white">Lorem ipsum dolor sit amet consectetur.</h5>
+                <p class="font-normal lg:text-17 md:text-14 sm:text-14 text-black text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et massa mi. Aliquam in hendrerit urna. Pellentesque sit amet sapien fringilla, mattis ligula consectetur, ultrices mauris. Maecenas vitae mattis tellus..</p>
             </a>
         </div>
 
 
         <div class="col-span-2 md:col-span-1 flex justify-center">
-            <a class=" w-card h-card p-6 bg-krem border border-gray-200 rounded-lg shadow flex flex-col justify-center items-center">
-                <img src="../img/like icon.png" class="h-7 w-7 mb-2">
-                <h5 class="mb-2 text-xl font-semibold tracking-tight text-black dark:text-white">Lorem ipsum dolor sit amet consectetur.</h5>
-                <p class="font-normal text-black text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et massa mi. Aliquam in hendrerit urna. Pellentesque sit amet sapien fringilla, mattis ligula consectetur, ultrices mauris. Maecenas vitae mattis tellus..</p>
+            <a class=" lg:w-card lg:h-card md: w-347 md:h-233 w p-6 bg-krem border border-gray-200 rounded-lg shadow flex flex-col justify-center items-center">
+                <img src="../img/like icon.png" class="lg:h-7 lg:w-7 md:h-5 md:w-5 mb-2">
+                <h5 class="mb-2 lg:text-xl md:text-17 sm:text-14 md:text-center font-semibold tracking-tight text-black dark:text-white">Lorem ipsum dolor sit amet consectetur.</h5>
+                <p class="font-normal lg:text-17 md:text-14 sm:text-14 text-black text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et massa mi. Aliquam in hendrerit urna. Pellentesque sit amet sapien fringilla, mattis ligula consectetur, ultrices mauris. Maecenas vitae mattis tellus..</p>
+            </a>
+        </div>
+
+
+        <div class="col-span-2 md:col-span-1 flex justify-center">
+            <a class=" lg:w-card lg:h-card md: w-347 md:h-233 w p-6 bg-krem border border-gray-200 rounded-lg shadow flex flex-col justify-center items-center">
+                <img src="../img/like icon.png" class="lg:h-7 lg:w-7 md:h-5 md:w-5 mb-2">
+                <h5 class="mb-2 lg:text-xl md:text-17 sm:text-14 md:text-center font-semibold tracking-tight text-black dark:text-white">Lorem ipsum dolor sit amet consectetur.</h5>
+                <p class="font-normal lg:text-17 md:text-14 sm:text-14 text-black text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et massa mi. Aliquam in hendrerit urna. Pellentesque sit amet sapien fringilla, mattis ligula consectetur, ultrices mauris. Maecenas vitae mattis tellus..</p>
             </a>
         </div>
 
@@ -104,21 +95,21 @@
 
 <!-- Kategori -->
 <div id="catalog" class="w-full h-auto mt-32 flex flex-col items-center justify-center">
-    <h1 class="text-2xl font-bold text-coklat">CATALOG</h1>
-    <h4 class="text-15 font-medium text-coklat mt-10 mr-auto ml-44">Pilihan Categori</h4>
+    <h1 class="lg:text-2xl md:text-18 sm:text-xl font-bold text-coklat">CATALOG</h1>
+    <h4 class="text-15 font-medium text-coklat mt-10 mr-auto ml-44 md:hidden lg:block">Pilihan Categori</h4>
 
-    <div class="grid grid-cols-6 mt-3">
-        <button href="#" class="text-coklat bg-krem hover:bg-coklat hover:text-krem h-11 w-48 font-medium rounded-full text-15 shadow-xl px-5 py-2.5 text-center me-2 mb-2">TOP PICKS</button>
-        <button href="#" class="text-coklat bg-krem hover:bg-coklat hover:text-krem h-11 w-48 font-medium rounded-full text-15 shadow-xl px-5 py-2.5 text-center me-2 mb-2">BEDROOM SET</button>
-        <button href="#" class="text-coklat bg-krem hover:bg-coklat hover:text-krem h-11 w-48 font-medium rounded-full text-15 shadow-xl px-5 py-2.5 text-center me-2 mb-2">KITCHEN SET</button>
-        <button href="#" class="text-coklat bg-krem hover:bg-coklat hover:text-krem h-11 w-48 font-medium rounded-full text-15 shadow-xl px-5 py-2.5 text-center me-2 mb-2">KITCHEN SET</button>
-        <button href="#" class="text-coklat bg-krem hover:bg-coklat hover:text-krem h-11 w-48 font-medium rounded-full text-15 shadow-xl px-5 py-2.5 text-center me-2 mb-2">KITCHEN SET</button>
-        <button href="#" class="text-coklat bg-krem hover:bg-coklat hover:text-krem h-11 w-48 font-medium rounded-full text-15 shadow-xl px-5 py-2.5 text-center me-2 mb-2">KITCHEN SET</button>
+    <div class="grid grid-cols-6 mt-3 sm:hidden lg:block md:block">
+        <button href="#" class="text-coklat bg-krem hover:bg-coklat hover:text-krem lg:h-11 lg:w-48 md:h-31 md:w-130 font-medium rounded-full lg:text-15 md:text-12 shadow-xl px-5 py-2.5 text-center me-2 mb-2">TOP PICKS</button>
+        <button href="#" class="text-coklat bg-krem hover:bg-coklat hover:text-krem lg:h-11 lg:w-48 md:h-31 md:w-130 font-medium rounded-full lg:text-15 md:text-12 shadow-xl px-5 py-2.5 text-center me-2 mb-2">TOP PICKS</button>
+        <button href="#" class="text-coklat bg-krem hover:bg-coklat hover:text-krem lg:h-11 lg:w-48 md:h-31 md:w-130 font-medium rounded-full lg:text-15 md:text-12 shadow-xl px-5 py-2.5 text-center me-2 mb-2">TOP PICKS</button>
+        <button href="#" class="text-coklat bg-krem hover:bg-coklat hover:text-krem lg:h-11 lg:w-48 md:h-31 md:w-130 font-medium rounded-full lg:text-15 md:text-12 shadow-xl px-5 py-2.5 text-center me-2 mb-2">TOP PICKS</button>
+        <button href="#" class="text-coklat bg-krem hover:bg-coklat hover:text-krem lg:h-11 lg:w-48 md:h-31 md:w-130 font-medium rounded-full lg:text-15 md:text-12 shadow-xl px-5 py-2.5 text-center me-2 mb-2">TOP PICKS</button>
+        <button href="#" class="text-coklat bg-krem hover:bg-coklat hover:text-krem lg:h-11 lg:w-48 md:h-31 md:w-130 font-medium rounded-full lg:text-15 md:text-12 shadow-xl px-5 py-2.5 text-center me-2 mb-2">TOP PICKS</button>
     </div>
 
-    <div class="grid grid-cols-3 gap-5 mt-3">
+    <div class="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 gap-5 mt-3">
         
-        <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 h-72 w-96 ">
+        <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 lg:h-72 lg:w-96 md:w-347 md:h-250 sm:w-247 sm:h-192  ">
             <a href="#">
                 <img class="rounded-t-lg" src="../img/Rectangle 7.png" alt="" />
             </a>
@@ -128,7 +119,7 @@
             </div>
         </div>
 
-        <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 h-72 w-96 ">
+        <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 lg:h-72 lg:w-96 md:w-347 md:h-250 sm:w-247 sm:h-192  ">
             <a href="#">
                 <img class="rounded-t-lg" src="../img/Rectangle 7.png" alt="" />
             </a>
@@ -138,7 +129,7 @@
             </div>
         </div>
 
-        <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 h-72 w-96 ">
+        <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 lg:h-72 lg:w-96 md:w-347 md:h-250 sm:w-247 sm:h-192  ">
             <a href="#">
                 <img class="rounded-t-lg" src="../img/Rectangle 7.png" alt="" />
             </a>
@@ -148,7 +139,8 @@
             </div>
         </div>
 
-        <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 h-72 w-96 ">
+
+        <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 lg:h-72 lg:w-96 md:w-347 md:h-250 sm:w-247 sm:h-192  ">
             <a href="#">
                 <img class="rounded-t-lg" src="../img/Rectangle 7.png" alt="" />
             </a>
@@ -158,7 +150,16 @@
             </div>
         </div>
 
-        <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 h-72 w-96 ">
+        <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 lg:h-72 lg:w-96 md:w-347 md:h-250 sm:w-247 sm:h-192  ">
+            <a href="#">
+                <img class="rounded-t-lg" src="../img/Rectangle 7.png" alt="" />
+            </a>
+            <div class="p-5">
+                <h4 class="text-15 font-medium text-coklat mr-auto">Lemari Kayu</h4>
+                <h4 class="text-lg font-medium text-coklat mr-auto">Lemari</h4>
+            </div>
+        </div>
+        <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 lg:h-72 lg:w-96 md:w-347 md:h-250 sm:w-247 sm:h-192  ">
             <a href="#">
                 <img class="rounded-t-lg" src="../img/Rectangle 7.png" alt="" />
             </a>
@@ -168,30 +169,22 @@
             </div>
         </div>
 
-        <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 h-72 w-96 ">
-            <a href="#">
-                <img class="rounded-t-lg" src="../img/Rectangle 7.png" alt="" />
-            </a>
-            <div class="p-5">
-                <h4 class="text-15 font-medium text-coklat mr-auto">Lemari Kayu</h4>
-                <h4 class="text-lg font-medium text-coklat mr-auto">Lemari</h4>
-            </div>
-        </div>
 
     </div>
 </div>
 
 <!--kontak-->
 <div class="w-full h-auto mt-32 flex flex-col items-center justify-center">
-    <img src="../img/Group 18.png" class="w-777 h-587 ml-auto">
+    <img src="../img/Group 18.png" class="lg:w-777 lg:h-587 md:h-325 ml-auto lg:block md:block sm:hidden">
+    <img src="../img/Group 21.png" class="lg:w-777 lg:h-587 md:h-325 sm:h-325 ml-auto lg:hidden md:hidden sm:block">
 
-<div class=" absolute max-w-sm mr-120" id="kontak">
+
+<div class=" lg:absolute md:absolute lg:w-384 md:w-52 sm:w-80 lg:mr-120 md:mr-96" id="kontak">
     <a href="#"
-        <h5 class="mb-2 text-4xl font-medium tracking-tight text-coklat">Noteworthy technology acquisitions 2021</h5>
+        <h5 class="mb-2 lg:text-4xl md:text-20 font-medium tracking-tight text-coklat">Noteworthy technology acquisitions 2021</h5>
     </a>
-    
-    <button href="#" type="button" class="mt-5 text-krem bg-coklat font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 mb-2">
-        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" class=" w-7 h-7 me-2" viewBox="0 0 50 50"
+    <button href="#" type="button" class="mt-5 text-krem bg-coklat font-medium rounded-lg lg:text-sm md:text-10 sm:text-8 px-5 py-2.5 text-center inline-flex sm:ml-24 lg:ml-0 md:ml-0 me-2 mb-2">
+        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" class=" lg:w-7 lg:h-7 md:w-5 md:h-5 sm:w-4 sm:h-4 me-2" viewBox="0 0 50 50"
         style="fill:#FFFFFF;">
         <path d="M 25 2 C 12.309534 2 2 12.309534 2 25 C 2 29.079097 3.1186875 32.88588 4.984375 36.208984 L 2.0371094 46.730469 A 1.0001 1.0001 0 0 0 3.2402344 47.970703 L 14.210938 45.251953 C 17.434629 46.972929 21.092591 48 25 48 C 37.690466 48 48 37.690466 48 25 C 48 12.309534 37.690466 2 25 2 z M 25 4 C 36.609534 4 46 13.390466 46 25 C 46 36.609534 36.609534 46 25 46 C 21.278025 46 17.792121 45.029635 14.761719 43.333984 A 1.0001 1.0001 0 0 0 14.033203 43.236328 L 4.4257812 45.617188 L 7.0019531 36.425781 A 1.0001 1.0001 0 0 0 6.9023438 35.646484 C 5.0606869 32.523592 4 28.890107 4 25 C 4 13.390466 13.390466 4 25 4 z M 16.642578 13 C 16.001539 13 15.086045 13.23849 14.333984 14.048828 C 13.882268 14.535548 12 16.369511 12 19.59375 C 12 22.955271 14.331391 25.855848 14.613281 26.228516 L 14.615234 26.228516 L 14.615234 26.230469 C 14.588494 26.195329 14.973031 26.752191 15.486328 27.419922 C 15.999626 28.087653 16.717405 28.96464 17.619141 29.914062 C 19.422612 31.812909 21.958282 34.007419 25.105469 35.349609 C 26.554789 35.966779 27.698179 36.339417 28.564453 36.611328 C 30.169845 37.115426 31.632073 37.038799 32.730469 36.876953 C 33.55263 36.755876 34.456878 36.361114 35.351562 35.794922 C 36.246248 35.22873 37.12309 34.524722 37.509766 33.455078 C 37.786772 32.688244 37.927591 31.979598 37.978516 31.396484 C 38.003976 31.104927 38.007211 30.847602 37.988281 30.609375 C 37.969311 30.371148 37.989581 30.188664 37.767578 29.824219 C 37.302009 29.059804 36.774753 29.039853 36.224609 28.767578 C 35.918939 28.616297 35.048661 28.191329 34.175781 27.775391 C 33.303883 27.35992 32.54892 26.991953 32.083984 26.826172 C 31.790239 26.720488 31.431556 26.568352 30.914062 26.626953 C 30.396569 26.685553 29.88546 27.058933 29.587891 27.5 C 29.305837 27.918069 28.170387 29.258349 27.824219 29.652344 C 27.819619 29.649544 27.849659 29.663383 27.712891 29.595703 C 27.284761 29.383815 26.761157 29.203652 25.986328 28.794922 C 25.2115 28.386192 24.242255 27.782635 23.181641 26.847656 L 23.181641 26.845703 C 21.603029 25.455949 20.497272 23.711106 20.148438 23.125 C 20.171937 23.09704 20.145643 23.130901 20.195312 23.082031 L 20.197266 23.080078 C 20.553781 22.728924 20.869739 22.309521 21.136719 22.001953 C 21.515257 21.565866 21.68231 21.181437 21.863281 20.822266 C 22.223954 20.10644 22.02313 19.318742 21.814453 18.904297 L 21.814453 18.902344 C 21.828863 18.931014 21.701572 18.650157 21.564453 18.326172 C 21.426943 18.001263 21.251663 17.580039 21.064453 17.130859 C 20.690033 16.232501 20.272027 15.224912 20.023438 14.634766 L 20.023438 14.632812 C 19.730591 13.937684 19.334395 13.436908 18.816406 13.195312 C 18.298417 12.953717 17.840778 13.022402 17.822266 13.021484 L 17.820312 13.021484 C 17.450668 13.004432 17.045038 13 16.642578 13 z M 16.642578 15 C 17.028118 15 17.408214 15.004701 17.726562 15.019531 C 18.054056 15.035851 18.033687 15.037192 17.970703 15.007812 C 17.906713 14.977972 17.993533 14.968282 18.179688 15.410156 C 18.423098 15.98801 18.84317 16.999249 19.21875 17.900391 C 19.40654 18.350961 19.582292 18.773816 19.722656 19.105469 C 19.863021 19.437122 19.939077 19.622295 20.027344 19.798828 L 20.027344 19.800781 L 20.029297 19.802734 C 20.115837 19.973483 20.108185 19.864164 20.078125 19.923828 C 19.867096 20.342656 19.838461 20.445493 19.625 20.691406 C 19.29998 21.065838 18.968453 21.483404 18.792969 21.65625 C 18.639439 21.80707 18.36242 22.042032 18.189453 22.501953 C 18.016221 22.962578 18.097073 23.59457 18.375 24.066406 C 18.745032 24.6946 19.964406 26.679307 21.859375 28.347656 C 23.05276 29.399678 24.164563 30.095933 25.052734 30.564453 C 25.940906 31.032973 26.664301 31.306607 26.826172 31.386719 C 27.210549 31.576953 27.630655 31.72467 28.119141 31.666016 C 28.607627 31.607366 29.02878 31.310979 29.296875 31.007812 L 29.298828 31.005859 C 29.655629 30.601347 30.715848 29.390728 31.224609 28.644531 C 31.246169 28.652131 31.239109 28.646231 31.408203 28.707031 L 31.408203 28.708984 L 31.410156 28.708984 C 31.487356 28.736474 32.454286 29.169267 33.316406 29.580078 C 34.178526 29.990889 35.053561 30.417875 35.337891 30.558594 C 35.748225 30.761674 35.942113 30.893881 35.992188 30.894531 C 35.995572 30.982516 35.998992 31.07786 35.986328 31.222656 C 35.951258 31.624292 35.8439 32.180225 35.628906 32.775391 C 35.523582 33.066746 34.975018 33.667661 34.283203 34.105469 C 33.591388 34.543277 32.749338 34.852514 32.4375 34.898438 C 31.499896 35.036591 30.386672 35.087027 29.164062 34.703125 C 28.316336 34.437036 27.259305 34.092596 25.890625 33.509766 C 23.114812 32.325956 20.755591 30.311513 19.070312 28.537109 C 18.227674 27.649908 17.552562 26.824019 17.072266 26.199219 C 16.592866 25.575584 16.383528 25.251054 16.208984 25.021484 L 16.207031 25.019531 C 15.897202 24.609805 14 21.970851 14 19.59375 C 14 17.077989 15.168497 16.091436 15.800781 15.410156 C 16.132721 15.052495 16.495617 15 16.642578 15 z"></path>
         </svg>
