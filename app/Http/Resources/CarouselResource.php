@@ -18,6 +18,7 @@ class CarouselResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
+            'image' => $this->image,
             'created_at' => Carbon::parse($this->created_at) -> format('Y-m-d'),
             'author_id' => $this->author_id,
             'author' => $this->whenLoaded('author'),
