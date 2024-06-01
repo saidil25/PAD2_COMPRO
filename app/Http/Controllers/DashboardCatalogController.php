@@ -29,67 +29,69 @@ class DashboardCatalogController extends Controller
             'category' => 'required|exists:categories,name',
             'file' => 'image|mimes:jpeg,png,jpg|max:10000'
         ], [
-            'file.mimes' => 'The file must be a valid image file (jpeg, png, jpg)',
-            'file.max' => 'The file size must not exceed 10MB'
+            'file.mimes' => 'File harus berupa file gambar yang valid (jpeg, png, jpg)',
+            'file.max' => 'Ukuran file tidak boleh lebih dari 10MB'
         ]);
-
+    
         $result = null;
-
+    
         if ($request->hasFile('file')) {
             $fileName = $this->generateRandomString();
             $extension = $request->file('file')->extension();
             $result = $fileName.'.'.$extension;
-
+    
+            // Simpan file ke direktori public/image
             $request->file('file')->storeAs('public/image', $result);
         }
-
+    
         $request['image'] = $result;
-
         $request['author_id'] = Auth::user()->id;
-
+    
         $category = Category::where('name', $request->category)->first();
         $request['category_id'] = $category->id;
-
+    
         $catalog = Catalog::create($request->all());
-
+    
         return response()->json([
-            'message' => 'Catalog created successfully',
+            'message' => 'Catalog berhasil dibuat',
             'catalog' => new CatalogDetailResource($catalog->loadMissing(['author:id,email,username', 'category:id,name']))
         ], 201);
     }
-
+    
     public function update(Request $request, $id) {
         $validated = $request->validate([
             'title' => 'max:255',
             'category' => 'exists:categories,name',
             'file' => 'image|mimes:jpeg,png,jpg|max:10000'
         ], [
-            'file.mimes' => 'The file must be a valid image file (jpeg, png, jpg)',
-            'file.max' => 'The file size must not exceed 10MB'
+            'file.mimes' => 'File harus berupa file gambar yang valid (jpeg, png, jpg)',
+            'file.max' => 'Ukuran file tidak boleh lebih dari 10MB'
         ]);
-
+    
         $category = Category::where('name', $request->category)->first();
         $request['category_id'] = $category->id;
-
+    
         $catalog = Catalog::findOrFail($id);
-
+    
         if ($request->hasFile('file')) {
             if ($catalog->image) {
-                Storage::delete('image/' . $catalog->image);
+                // Hapus file lama dari direktori public/image
+                Storage::delete('public/image/' . $catalog->image);
             }
-
+    
             $fileName = $this->generateRandomString();
             $extension = $request->file('file')->extension();
             $result = $fileName.'.'.$extension;
-
-            $request->file('file')->storeAs('image', $result);
+    
+            // Simpan file baru ke direktori public/image
+            $request->file('file')->storeAs('public/image', $result);
             $request['image'] = $result;
         }
-
+    
         $catalog->update($request->only('title', 'description', 'category_id', 'image'));
-
+    
         return response()->json([
-            'message' => 'Catalog updated successfully',
+            'message' => 'Catalog berhasil diperbarui',
             'catalog' => new CatalogDetailResource($catalog->loadMissing(['author:id,email,username', 'category:id,name']))
         ]);
     }

@@ -12,18 +12,35 @@
   <!-- Tailwind -->
   @vite('resources/css/app.css')
   <script>
-    function login() {
+    async function login() {
       // Mendapatkan nilai dari input username dan password
-      var username = document.getElementById("email").value;
+      var email = document.getElementById("email").value;
       var password = document.getElementById("password").value;
-      
-      // Cek jika username dan password sesuai dengan yang diinginkan
-      if (username === "admin" && password === "1234") {
-        // Jika sesuai, maka alihkan ke halaman dashboard_admin.blade.php
-        window.location.href = "carouselform";
-      } else {
-        // Jika tidak sesuai, berikan pesan kesalahan
-        alert("Username atau password salah!");
+
+      try {
+        const response = await fetch('http://127.0.0.1:8000/api/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({ email, password })
+        });
+
+        if (!response.ok) {
+          throw new Error('Login failed');
+        }
+
+        const data = await response.json();
+        alert('Login successful!');
+
+        // Redirect to the dashboard or handle login success
+        window.location.href = "/carouselform";
+
+        // Optionally, store the token for authenticated requests
+        localStorage.setItem('authToken', data.token);
+      } catch (error) {
+        alert('Username atau password salah!');
       }
     }
   </script>
