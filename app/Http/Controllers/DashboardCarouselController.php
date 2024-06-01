@@ -29,16 +29,16 @@ class DashboardCarouselController extends Controller
         if ($request->hasFile('file')) {
             $fileName = $this->generateRandomString();
             $extension = $request->file('file')->extension();
-            $result = $fileName.'.'.$extension;
+            $result = $fileName . '.' . $extension;
 
             $request->file('file')->storeAs('public/image', $result);
         }
 
-        $request['image'] = $result;
-
-        $request['author_id'] = Auth::user()->id;
-
-        $carousel = Carousel::create($request->all());
+        $carousel = new Carousel();
+        $carousel->title = $request->title;
+        $carousel->image = $result;
+        $carousel->author_id = Auth::user()->id;
+        $carousel->save();
 
         return response()->json([
             'message' => 'Carousel created successfully',
@@ -47,8 +47,10 @@ class DashboardCarouselController extends Controller
     }
 
     public function update(Request $request, $id) {
+
         $validated = $request->validate([
             'title' => 'max:255',
+            'file' => 'image|mimes:jpeg,png,jpg|max:10000'
         ], [
             'file.mimes' => 'The file must be a valid image file (jpeg, png, jpg)',
             'file.max' => 'The file size must not exceed 10MB'
@@ -58,18 +60,22 @@ class DashboardCarouselController extends Controller
 
         if ($request->hasFile('file')) {
             if ($carousel->image) {
-                Storage::delete('image/' . $carousel->image);
+                Storage::delete('public/image/' . $carousel->image);
             }
 
             $fileName = $this->generateRandomString();
             $extension = $request->file('file')->extension();
-            $result = $fileName.'.'.$extension;
+            $result = $fileName . '.' . $extension;
 
-            $request->file('file')->storeAs('image', $result);
-            $request['image'] = $result;
+            $request->file('file')->storeAs('public/image', $result);
+            $carousel->image = $result;
         }
 
-        $carousel->update($request->only('title', 'image'));
+        if ($request->title) {
+            $carousel->title = $request->title;
+        }
+
+        $carousel->save();
 
         return response()->json([
             'message' => 'Carousel updated successfully',
@@ -78,10 +84,12 @@ class DashboardCarouselController extends Controller
     }
 
     public function destroy($id) {
-        $carousel =  Carousel::findOrFail($id);
+
+        // dd($id);
+        $carousel = Carousel::findOrFail($id);
 
         if ($carousel->image) {
-            Storage::delete('image/' . $carousel->image);
+            Storage::delete('public/image/' . $carousel->image);
         }
 
         $carousel->delete();
