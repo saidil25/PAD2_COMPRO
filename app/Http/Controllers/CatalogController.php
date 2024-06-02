@@ -10,12 +10,12 @@ use Illuminate\Http\Request;
 class CatalogController extends Controller
 {
     public function index() {
-        $catalogs = Catalog::with(['author:id,email,username', 'category:id,name'])->get();
+        $catalogs = Catalog::with('category:id,name')->get();
         return CatalogResource::collection($catalogs);
     }
 
     public function show($id) {
-        $catalog =  Catalog::with(['author:id,email,username', 'category:id,name'])->findOrFail($id);
+        $catalog = Catalog::with(['author:id,email,username', 'category:id,name'])->findOrFail($id);
         return new CatalogDetailResource($catalog);
     }
 }

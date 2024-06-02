@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('carousels', function (Blueprint $table) {
             $table->id();
-            $table->string('title', 255);
+            $table->text('title', 255);
             $table->string('image', 255)->nullable();
             $table->unsignedBigInteger("author_id");
             $table->timestamps();

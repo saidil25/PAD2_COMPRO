@@ -40,8 +40,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('/dashboard/catalogs/{id}', [DashboardCatalogController::class, 'destroy'])->middleware('post-owner');
 
     Route::post('/dashboard/carousel', [DashboardCarouselController::class, 'store']);
-    Route::put('/dashboard/carousel/{id}', [DashboardCarouselController::class, 'update']);
-    Route::delete('/dashboard/carousel/{id}', [DashboardCarouselController::class, 'destroy']);
+    Route::put('/dashboard/carousel/{id}', [DashboardCarouselController::class, 'update'])->middleware('carousel-owner');
+    Route::delete('/dashboard/carousel/{id}', [DashboardCarouselController::class, 'destroy'])->middleware('carousel-owner');
 });
 
 

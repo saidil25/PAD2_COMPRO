@@ -19,6 +19,10 @@ class CatalogResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'image' => $this->image,
+            'description' => $this->description,
+            'created_at' => Carbon::parse($this->created_at) -> format('Y-m-d'),
+            'author_id' => $this->author_id,
+            'author' => $this->whenLoaded('author'),
             'category_id' => $this->category_id,
             'category' => $this->whenLoaded('category'),
         ];

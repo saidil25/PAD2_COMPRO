@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Storage;
 class DashboardCatalogController extends Controller
 {
     public function index() {
-        $catalogs = Catalog::all();
+        $catalogs = Catalog::with('category:id,name')->get();
         return CatalogResource::collection($catalogs);
     }
 
