@@ -21,6 +21,7 @@ use App\Http\Controllers\DashboardCarouselController;
 */
 
 Route::get('/catalogs', [CatalogController::class, 'index']);
+Route::get('/catalogs/filter', [CatalogController::class, 'filter']);
 Route::get('/catalogs/{id}', [CatalogController::class, 'show']);
 Route::get('/carousel', [CarouselController::class, 'index']);
 Route::get('/categories', [CategoryController::class, 'index']);

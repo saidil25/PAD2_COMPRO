@@ -110,7 +110,7 @@ class DashboardCatalogController extends Controller
         ]);
     }
 
-    function generateRandomString($length = 30) {
+    public function generateRandomString($length = 30) {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
         $randomString = '';
@@ -118,5 +118,23 @@ class DashboardCatalogController extends Controller
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
         return $randomString;
+    }
+
+    public function filter(Request $request) {
+        $request->validate([
+            'category' => 'required|string'
+        ]);
+
+        $category = Category::where('name', $request->category)->first();
+
+        if (!$category) {
+            return response()->json(['error' => 'Category not found'], 404);
+        }
+
+        $catalogs = Catalog::with('category:id,name')
+            ->where('category_id', $category->id)
+            ->get();
+
+        return CatalogResource::collection($catalogs);
     }
 }
