@@ -10,8 +10,8 @@
                         <th scope="col" class="px-6 py-3 border-b">Title</th>
                         <th scope="col" class="px-6 py-3 border-b">Category</th>
                         <th scope="col" class="px-6 py-3 border-b">Image</th>
-                        <th scope="col" class="px-6 py-3 border-b"><span class="sr-only">Edit</span></th>
-                        <th scope="col" class="px-6 py-3 border-b"><span class="sr-only">Delete</span></th>
+                        <th scope="col" class="px-3 py-3 border-b"></th>
+                        <th scope="col" class="px-6 py-3 border-b"><a href="/catalogform" class="bg-coklat hover:bg-krem hover:text-coklat text-white font-bold py-2 px-4 rounded">Tambah</a></th>
                     </tr>
                 </thead>
                 <tbody id="tableBody">
@@ -22,6 +22,7 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         fetchData();
@@ -41,13 +42,14 @@
         data.forEach(item => {
             const row = document.createElement('tr');
             row.className = 'bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600';
+            row.setAttribute('data-id', item.id); // Menyimpan ID item sebagai data attribute
 
             // Construct the image URL
             const imageUrl = item.image ? `http://127.0.0.1:8000/storage/image/${item.image}` : '';
 
             row.innerHTML = `
                 <td class="px-6 py-4 border-b">${item.title}</td>
-                <td class="px-6 py-4 border-b">${item.category}</td>
+                <td class="px-6 py-4 border-b">${item.category.name}</td>
                 <td class="px-6 py-4 border-b">${imageUrl ? `<img src="${imageUrl}" alt="${item.title}" class="w-64 h-64 object-cover mx-auto">` : 'No Image'}</td>
                 <td class="px-6 py-4 text-right border-b"><a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" onclick="editItem(${item.id})">Edit</a></td>
                 <td class="px-6 py-4 text-right border-b"><a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline" onclick="deleteItem(${item.id})">Delete</a></td>
@@ -58,30 +60,68 @@
     }
 
     function editItem(id) {
-        alert('Edit item with ID: ' + id);
-        // Implement edit functionality here
+        window.location.href = `/catalogform/${id}`;
     }
 
     function deleteItem(id) {
-    if (confirm('Are you sure you want to delete this item?')) {
-        fetch(`http://127.0.0.1:8000/api/dashboard/carousel/${id}`, {
-            method: 'DELETE',
-        })
-        .then(response => {
-            if (response.ok) {
-                console.log('Item deleted with ID:', id);
-                // Hapus baris dari tabel setelah penghapusan berhasil
-                const row = document.querySelector(`#tableBody tr[data-id="${id}"]`);
-                if (row) {
-                    row.remove();
-                }
-            } else {
-                console.error('Error deleting item with ID:', id);
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const token = localStorage.getItem('authToken'); // Ambil token dari local storage atau cookie
+
+                fetch(`http://127.0.0.1:8000/api/dashboard/catalogs/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'Authorization': `Bearer ${token}` // Gunakan token autentikasi di sini
+                    },
+                    body: JSON.stringify({
+                        _token: token // Jika diperlukan untuk CSRF protection
+                    })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('Item deleted with ID:', id);
+                        // Hapus baris dari tabel setelah penghapusan berhasil
+                        const row = document.querySelector(`#tableBody tr[data-id="${id}"]`);
+                        if (row) {
+                            row.remove();
+                        }
+                        // Memuat ulang data setelah menghapus item
+                        fetchData(); // Memanggil kembali fetchData untuk memperbarui tabel
+                        Swal.fire(
+                            'Deleted!',
+                            'Your item has been deleted.',
+                            'success'
+                        )
+                    } else {
+                        console.error('Error deleting item with ID:', id);
+                        Swal.fire(
+                            'Error!',
+                            'There was an error deleting the item.',
+                            'error'
+                        )
+                    }
+                })
+                .catch(error => {
+                    console.error('Error deleting item:', error);
+                    Swal.fire(
+                        'Error!',
+                        'There was an error deleting the item.',
+                        'error'
+                    )
+                });
             }
         })
-        .catch(error => console.error('Error deleting item:', error));
     }
-}
-
 </script>
+
 @endsection

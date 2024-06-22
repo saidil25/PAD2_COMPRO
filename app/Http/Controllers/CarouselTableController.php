@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class CarouselCrudController extends Controller
+class CarouselTableController extends Controller
 {
     public function index (){
-        return view('admin.carousel_form');
+        return view('admin.carousel_table');
     }
 }

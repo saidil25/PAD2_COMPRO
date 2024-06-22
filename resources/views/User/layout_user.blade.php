@@ -16,7 +16,7 @@
 </head>
 <body class="relative">
   <!--navbar-->
- <nav class="pt-9 px-4 pl-12 fixed top-0 lg:w-full md:w-full sm:w-full bg-white z-10">
+ <nav class="pt-9 pb-4 px-4 pl-12 fixed top-0 lg:w-full md:w-full sm:w-full bg-white z-10">
     <div class="container flex justify-between items-center">
         <div class="flex items-center"> <!-- Mengubah class flex menjadi flex items-center -->
             <div class="md:hidden block mr-4"> <!-- Memindahkan ikon menu ke paling kiri -->

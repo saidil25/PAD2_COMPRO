@@ -7,6 +7,8 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\DashboardAdminController;
 use App\Http\Controllers\CarouselCrudController;
 use App\Http\Controllers\CatalogCrudController;
+use App\Http\Controllers\CatalogsTableController;
+use App\Http\Controllers\CarouselTableController;
 
 
 
@@ -30,3 +32,5 @@ Route::get('/login', [LoginController::class, 'index'])->name('admin.index');
 Route::get('/admin', [DashboardAdminController::class, 'index'])->name('admin.index');
 Route::get('/carouselform', [CarouselCrudController::class, 'index'])->name('admin.index');
 Route::get('/catalogform', [CatalogCrudController::class, 'index'])->name('admin.index');
+Route::get('/carouseltable', [CarouselTableController::class, 'index'])->name('admin.index');
+Route::get('/catalogtable', [CatalogsTableController::class, 'index'])->name('admin.index');

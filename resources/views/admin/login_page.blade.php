@@ -9,13 +9,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
   <!-- Alpine JS -->
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-  <!-- Tailwind -->
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- Tailwind CSS -->
   @vite('resources/css/app.css')
   <script>
     async function login() {
-      // Mendapatkan nilai dari input username dan password
       var email = document.getElementById("email").value;
-      var password = document.getElementById("password").value;
+      var password = document.getElementById("pass").value;
 
       try {
         const response = await fetch('http://127.0.0.1:8000/api/login', {
@@ -32,35 +33,75 @@
         }
 
         const data = await response.json();
-        alert('Login successful!');
 
-        // Redirect to the dashboard or handle login success
-        window.location.href = "/carouselform";
-
-        // Optionally, store the token for authenticated requests
+        // Store the token for authenticated requests
         localStorage.setItem('authToken', data.token);
+
+        // SweetAlert for success message
+        Swal.fire({
+          icon: 'success',
+          title: 'Login successful!',
+          showConfirmButton: false,
+          timer: 1500
+        }).then(() => {
+          // Redirect to the dashboard or handle login success
+          window.location.href = "/carouseltable";
+        });
+
       } catch (error) {
-        alert('Username atau password salah!');
+        Swal.fire({
+          icon: 'error',
+          title: 'Login failed',
+          text: 'Username atau password salah!',
+        });
       }
     }
   </script>
 </head>
-<body class="relative">
-<div class="w-full h-auto mt-32 flex flex-col items-center justify-center">
-    <div class="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
-        <form class="space-y-6" action="#">
-            <h5 class="text-xl font-medium text-gray-900 dark:text-white mb-4">Login Dashboard Admin</h5>
-            <div>
-                <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Username</label>
-                <input type="email" name="email" id="email" class=" mb-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="" required />
-            </div>
-            <div>
-                <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
-                <input type="password" name="password" id="password" placeholder="••••••••" class="mb-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required />
-            </div>
-            <button type="button" onclick="login()" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Login</button>
-        </form>
+<body class="relative bg-gray-100">
+  <div class="flex items-center justify-center min-h-screen">
+    <div class="flex flex-col m-6 space-y-8 bg-white shadow-2xl rounded-2xl md:flex-row md:space-y-0">
+      <!-- left side -->
+      <div class="flex flex-col justify-center p-8 md:p-14">
+        <span class="mb-3 text-4xl font-bold">Welcome back</span>
+        <span class="font-light text-gray-400 mb-8">
+          Welcome back! Please enter your details
+        </span>
+        <div class="py-4">
+          <span class="mb-2 text-md">Email</span>
+          <input
+            type="text"
+            class="w-full p-2 border border-gray-300 rounded-md placeholder-font-light placeholder-text-gray-500"
+            name="email"
+            id="email"
+          />
+        </div>
+        <div class="py-4">
+          <span class="mb-2 text-md">Password</span>
+          <input
+            type="password"
+            name="password"
+            id="pass"
+            class="w-full p-2 border border-gray-300 rounded-md placeholder-font-light placeholder-text-gray-500"
+          />
+        </div>
+        <button
+          type="button" 
+          onclick="login()"
+          class="w-full mt-6 bg-black text-white p-2 rounded-lg mb-6 hover:bg-white hover:text-black hover:border hover:border-gray-300"
+        >
+          Sign in
+        </button>
+      </div>
+      <!-- right side -->
+      <div class="relative hidden md:block">
+        <img
+          src="../img/login_landing.jpg"
+          alt="img"
+          class="w-[400px] h-full rounded-r-2xl object-cover"
+        />
+      </div>
     </div>
-</div>
+  </div>
 </body>
 </html>

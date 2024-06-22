@@ -96,111 +96,169 @@
 
 <!-- Kategori -->
 <div id="catalog" class="w-full h-auto mt-32 flex flex-col items-center justify-center">
-        <h1 class="lg:text-2xl md:text-18 sm:text-xl font-bold text-coklat">CATALOG</h1>
-        <h4 class="text-15 font-medium text-coklat mt-10 mr-auto ml-44 md:hidden lg:block">Pilihan Categori</h4>
+    <h1 class="lg:text-2xl md:text-18 sm:text-xl font-bold text-coklat">CATALOG</h1>
+    <h4 class="text-15 font-medium text-coklat mt-10 mr-auto ml-44 md:hidden sm:hidden lg:block">Pilihan Categori</h4>
 
-        <div class="grid grid-cols-6 mt-3 sm:hidden lg:block md:block">
-            <button href="#" class="text-coklat bg-krem hover:bg-coklat hover:text-krem lg:h-11 lg:w-48 md:h-31 md:w-130 font-medium rounded-full lg:text-15 md:text-12 shadow-xl px-5 py-2.5 text-center me-2 mb-2">TOP PICKS</button>
-            <button href="#" class="text-coklat bg-krem hover:bg-coklat hover:text-krem lg:h-11 lg:w-48 md:h-31 md:w-130 font-medium rounded-full lg:text-15 md:text-12 shadow-xl px-5 py-2.5 text-center me-2 mb-2">TOP PICKS</button>
-            <button href="#" class="text-coklat bg-krem hover:bg-coklat hover:text-krem lg:h-11 lg:w-48 md:h-31 md:w-130 font-medium rounded-full lg:text-15 md:text-12 shadow-xl px-5 py-2.5 text-center me-2 mb-2">TOP PICKS</button>
-            <button href="#" class="text-coklat bg-krem hover:bg-coklat hover:text-krem lg:h-11 lg:w-48 md:h-31 md:w-130 font-medium rounded-full lg:text-15 md:text-12 shadow-xl px-5 py-2.5 text-center me-2 mb-2">TOP PICKS</button>
-            <button href="#" class="text-coklat bg-krem hover:bg-coklat hover:text-krem lg:h-11 lg:w-48 md:h-31 md:w-130 font-medium rounded-full lg:text-15 md:text-12 shadow-xl px-5 py-2.5 text-center me-2 mb-2">TOP PICKS</button>
-            <button href="#" class="text-coklat bg-krem hover:bg-coklat hover:text-krem lg:h-11 lg:w-48 md:h-31 md:w-130 font-medium rounded-full lg:text-15 md:text-12 shadow-xl px-5 py-2.5 text-center me-2 mb-2">TOP PICKS</button>
-        </div>
-
-        <div id="catalog-container" class="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 gap-5 mt-3">
-            <!-- Dynamic content will be inserted here -->
-        </div>
-
-        <!-- Main modal -->
-        <div id="default-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full h-full bg-black bg-opacity-50 transition-opacity duration-300">
-            <div class="relative p-4 w-full max-w-2xl max-h-full transform scale-75 transition-transform duration-300">
-                <!-- Modal content -->
-                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                    <!-- Modal header -->
-                    <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                            Item Details
-                        </h3>
-                        <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="default-modal" onclick="closeModal()">
-                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                            </svg>
-                            <span class="sr-only">Close modal</span>
-                        </button>
-                    </div>
-                    <!-- Modal body -->
-                    <div class="p-4 md:p-5 space-y-4">
-                        <img id="modal-image" class="w-full rounded-lg" src="" alt="">
-                        <h4 id="modal-title-1" class="text-lg font-medium text-gray-900 dark:text-white"></h4>
-                        <h4 id="modal-title-2" class="text-lg font-medium text-gray-900 dark:text-white"></h4>
-                    </div>
-                    <!-- Modal footer -->
-                    <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-                        <button data-modal-hide="default-modal" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onclick="closeModal()">Close</button>
-                    </div>
-                </div>
-            </div>
+    <div id="category-buttons-container" class="overflow-y-auto overflow-x-auto w-full lg:w-1094 md:w-677 sm:w-384">
+        <div id="category-buttons" class="flex gap-5 mt-3 sm:hidden lg:block md:block">
+            <!-- Dynamic category buttons will be inserted here -->
         </div>
     </div>
 
-    <script>
-        async function fetchData() {
-            const response = await fetch('http://127.0.0.1:8000/api/catalogs');
-            const data = await response.json();
-            return data.data;
-        }
+    <div id="catalog-container" class="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 gap-5 mt-3 opacity-0 transform scale-95 transition-all duration-700 ease-in-out">
+        <!-- Dynamic content will be inserted here -->
+    </div>
+</div>
 
-        function openModal(title1, title2, imgSrc) {
-            const modal = document.getElementById('default-modal');
-            document.getElementById('modal-image').src = imgSrc;
-            document.getElementById('modal-title-1').textContent = title1;
-            document.getElementById('modal-title-2').textContent = title2;
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                modal.classList.add('opacity-100', 'scale-100');
-                modal.classList.remove('opacity-0', 'scale-75');
-            }, 10);
-        }
+<!-- Main modal -->
+<div id="default-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full h-full bg-black bg-opacity-50 transition-opacity duration-300">
+    <div class="relative p-4 w-full max-w-2xl max-h-full transform scale-75 transition-transform duration-300">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+            <!-- Modal header -->
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                    Item Details
+                </h3>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="default-modal" onclick="closeModal()">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <!-- Modal body -->
+            <div class="p-4 md:p-5 space-y-4">
+                <img id="modal-image" class="w-full rounded-lg" src="" alt="">
+                <h4 id="modal-title-1" class="text-lg font-medium text-gray-900 dark:text-white"></h4>
+                <p id="modal-description" class="text-base text-justify text-gray-700 dark:text-gray-300"></p>
+            </div>
+            <!-- Modal footer -->
+            <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                <button data-modal-hide="default-modal" type="button" class="text-white bg-coklat hover:bg-cokmud focus:ring-4 focus:outline-none focus:ring-cokmud font-medium rounded-lg text-sm px-5 py-2.5 text-center" onclick="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-        function closeModal() {
-            const modal = document.getElementById('default-modal');
-            modal.classList.add('opacity-0', 'scale-75');
-            modal.classList.remove('opacity-100');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 300);
-        }
+<script>
+    async function fetchCategories() {
+        const response = await fetch('http://127.0.0.1:8000/api/categories');
+        const data = await response.json();
+        return data.data;
+    }
 
-        function createCard(title, image, category) {
-            const container = document.getElementById('catalog-container');
+    async function fetchData(category = null) {
+        let url = 'http://127.0.0.1:8000/api/catalogs';
+        if (category) {
+            url = `http://127.0.0.1:8000/api/catalogs/filter?category=${category}`;
+        }
+        const response = await fetch(url);
+        const data = await response.json();
+        return data.data;
+    }
+
+    function openModal(title1, imgSrc, description) {
+        const modal = document.getElementById('default-modal');
+        document.getElementById('modal-image').src = imgSrc;
+        document.getElementById('modal-title-1').textContent = title1;
+        document.getElementById('modal-description').textContent = description;
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            modal.classList.add('opacity-100', 'scale-100');
+            modal.classList.remove('opacity-0', 'scale-75');
+        }, 10);
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('default-modal');
+        modal.classList.add('opacity-0', 'scale-75');
+        modal.classList.remove('opacity-100');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+        }, 300);
+    }
+
+    function createCard(title, image, category, description) {
+        const container = document.getElementById('catalog-container');
+        const button = document.createElement('button');
+        button.className = 'max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 lg:h-72 lg:w-96 md:w-347 md:h-250 sm:w-247 sm:h-192';
+        button.onclick = () => openModal(title, `http://127.0.0.1:8000/storage/image/${image}`, description);
+
+        button.innerHTML = `
+            <a>
+                <img class="rounded-t-lg lg:h-203 md:h-170 sm:h-110 lg:w-385 md:w-345 sm:w-220" src="http://127.0.0.1:8000/storage/image/${image}" alt="" />
+            </a>
+            <div class="p-5">
+                <h4 class="lg:text-15 md:text-15 font-medium sm:text-sm text-coklat mr-auto text-left">${category}</h4>
+                <h4 class="lg:text-lg md:text-lg font-medium sm:text-sm text-coklat mr-auto text-left">${title}</h4>
+            </div>
+        `;
+
+        container.appendChild(button);
+    }
+
+    function setActiveButton(button) {
+        const buttons = document.querySelectorAll('.filter-btn');
+        buttons.forEach(btn => {
+            btn.classList.remove('bg-coklat', 'text-krem');
+            btn.classList.add('bg-krem', 'text-coklat');
+        });
+        button.classList.add('bg-coklat', 'text-krem');
+        button.classList.remove('bg-krem', 'text-coklat');
+    }
+
+    async function initializeCatalog(category = null) {
+        const container = document.getElementById('catalog-container');
+        container.classList.remove('visible');  // Hide container before fetching new items
+        await new Promise(resolve => setTimeout(resolve, 700));  // Wait for hide animation to complete
+
+        container.innerHTML = '';  // Clear existing items
+        const items = await fetchData(category);
+        items.forEach(item => {
+            createCard(item.title, item.image, item.category.name, item.description);
+        });
+
+        setTimeout(() => {
+            container.classList.add('visible');  // Show container with animation
+        }, 100);
+    }
+
+    async function initializeCategories() {
+        const categories = await fetchCategories();
+        const container = document.getElementById('category-buttons');
+        container.innerHTML = ''; // Clear existing buttons
+        categories.forEach(category => {
             const button = document.createElement('button');
-            button.className = 'max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 lg:h-72 lg:w-96 md:w-347 md:h-250 sm:w-247 sm:h-192';
-            button.onclick = () => openModal(title, category, `http://127.0.0.1:8000/storage/image/${image}`);
-
-            button.innerHTML = `
-                <a>
-                    <img class="rounded-t-lg lg:h-203 md:h-170 sm:h-110 lg:w-385 md:w-345 sm:w-220" src="http://127.0.0.1:8000/storage/image/${image}" alt="" />
-                </a>
-                <div class="p-5">
-                    <h4 class="text-15 font-medium text-coklat mr-auto text-left">${category}</h4>
-                    <h4 class="text-lg font-medium text-coklat mr-auto text-left">${title}</h4>
-                </div>
-            `;
-
-            container.appendChild(button);
-        }
-
-        async function initializeCatalog() {
-            const items = await fetchData();
-            items.forEach(item => {
-                createCard(item.title, item.image, item.category.name);
+            button.className = 'filter-btn text-coklat bg-krem hover:bg-coklat hover:text-krem lg:h-11 lg:w-48 md:h-31 md:w-130 font-medium rounded-full lg:text-15 md:text-12 px-5 py-2.5 text-center me-2 mb-2';
+            button.setAttribute('data-category', category.name);
+            button.textContent = category.name;
+            button.addEventListener('click', (event) => {
+                const category = event.target.getAttribute('data-category');
+                setActiveButton(event.target);
+                initializeCatalog(category);
             });
-        }
+            container.appendChild(button);
+        });
 
-        // Initialize the catalog on page load
-        window.onload = initializeCatalog;
-    </script>
+        // Add the visible class after a short delay to trigger the animation
+        setTimeout(() => {
+            container.classList.add('visible');
+        }, 100);
+    }
+
+    // Initialize categories and catalog on page load
+    window.onload = async () => {
+        await initializeCategories();
+        const topPicsButton = [...document.querySelectorAll('.filter-btn')].find(btn => btn.getAttribute('data-category') === 'Top Pics');
+        if (topPicsButton) {
+            setActiveButton(topPicsButton);
+            initializeCatalog('Top Pics');
+        } else {
+            await initializeCatalog();
+        }
+    };
+</script>
 
 <style>
 #default-modal.opacity-0 {
@@ -214,6 +272,37 @@
 }
 #default-modal.scale-100 {
     transform: scale(1);
+}
+#category-buttons {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+#category-buttons.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+#catalog-container {
+    min-height: 350px; /* Adjust based on expected content */
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 1s ease, transform 1s ease;
+}
+#catalog-container.visible {
+    opacity: 1;
+    transform: scale(1);
+}
+#category-buttons-container {
+    white-space: nowrap;
+}
+#category-buttons {
+    display: flex;
+    gap: 5px;
+    padding: 10px 0;
+}
+.filter-btn {
+    display: inline-block;
+    white-space: nowrap;
 }
 </style>
 

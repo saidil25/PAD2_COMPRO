@@ -9,8 +9,8 @@
                     <tr>
                         <th scope="col" class="px-6 py-3 border-b">Title</th>
                         <th scope="col" class="px-6 py-3 border-b">Image</th>
-                        <th scope="col" class="px-6 py-3 border-b"><span class="sr-only">Edit</span></th>
-                        <th scope="col" class="px-6 py-3 border-b"><span class="sr-only">Delete</span></th>
+                        <th scope="col" class="px-6 py-3 border-b"></th>
+                        <th scope="col" class="px-6 py-3 border-b"><a href="/carouselform" class="bg-coklat hover:bg-krem hover:text-coklat text-white font-bold py-2 px-4 rounded">Tambah</a></th>
                     </tr>
                 </thead>
                 <tbody id="tableBody">
@@ -21,6 +21,7 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         fetchData();
@@ -56,30 +57,57 @@
     }
 
     function editItem(id) {
-        alert('Edit item with ID: ' + id);
-        // Implement edit functionality here
+        window.location.href = `/carouselform/${id}`;
     }
 
     function deleteItem(id) {
-    if (confirm('Are you sure you want to delete this item?')) {
-        fetch(`http://127.0.0.1:8000/api/dashboard/carousel/${id}`, {
-            method: 'DELETE',
-        })
-        .then(response => {
-            if (response.ok) {
-                console.log('Item deleted with ID:', id);
-                // Hapus baris dari tabel setelah penghapusan berhasil
-                const row = document.querySelector(`#tableBody tr[data-id="${id}"]`);
-                if (row) {
-                    row.remove();
-                }
-            } else {
-                console.error('Error deleting item with ID:', id);
-            }
-        })
-        .catch(error => console.error('Error deleting item:', error));
-    }
-}
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const token = localStorage.getItem('authToken'); // Ambil token dari local storage atau cookie
 
+                fetch(`http://127.0.0.1:8000/api/dashboard/carousel/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'Authorization': `Bearer ${token}` // Gunakan token autentikasi di sini
+                    },
+                    body: JSON.stringify({
+                        _token: token // Jika diperlukan untuk CSRF protection
+                    })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('Item deleted with ID:', id);
+                        Swal.fire('Deleted!', 'Your item has been deleted.', 'success');
+                        // Hapus baris dari tabel setelah penghapusan berhasil
+                        const row = document.querySelector(`#tableBody tr[data-id="${id}"]`);
+                        if (row) {
+                            row.remove();
+                        }
+                        // Memuat ulang data setelah menghapus item
+                        fetchData(); // Memanggil kembali fetchData untuk memperbarui tabel
+                    } else {
+                        console.error('Error deleting item with ID:', id);
+                        Swal.fire('Failed!', 'There was an error deleting the item.', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error deleting item:', error);
+                    Swal.fire('Failed!', 'There was an error deleting the item.', 'error');
+                });
+            } else if (result.isDenied) {
+                Swal.fire('Changes are not saved', '', 'info');
+            }
+        });
+    }
 </script>
 @endsection
