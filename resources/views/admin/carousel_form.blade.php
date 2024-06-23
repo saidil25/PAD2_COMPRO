@@ -28,113 +28,113 @@
         </form>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const getAuthToken = () => {
-            return localStorage.getItem('authToken');
-        };
+   document.addEventListener('DOMContentLoaded', function () {
+    const getAuthToken = () => {
+        return localStorage.getItem('authToken');
+    };
 
-        // Preview image functionality
-        const dropzone = document.getElementById('dropzone-file');
-        const previewImage = document.getElementById('preview-image');
+    // Preview image functionality
+    const dropzone = document.getElementById('dropzone-file');
+    const previewImage = document.getElementById('preview-image');
 
-        dropzone.addEventListener('change', () => {
-            const file = dropzone.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => {
-                    previewImage.src = reader.result;
-                };
-            } else {
-                previewImage.src = "#";
+    dropzone.addEventListener('change', () => {
+        const file = dropzone.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                previewImage.src = reader.result;
+            };
+        } else {
+            previewImage.src = "#";
+        }
+    });
+
+    // If editing, populate the form with existing carousel data
+    const carouselId = '{{ isset($carousel) ? $carousel->id : '' }}';
+    if (carouselId) {
+        fetch(`http://127.0.0.1:8000/api/dashboard/carousel/${carouselId}`, {
+            headers: {
+                'Authorization': `Bearer ${getAuthToken()}`
             }
-        });
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(carouselData => {
+            if (carouselData.data) {
+                const currentCarousel = carouselData.data;
+                document.getElementById('carousel-title').value = currentCarousel.title;
+                previewImage.src = currentCarousel.image ? `{{ asset('storage/image/') }}/${currentCarousel.image}` : '#';
+            } else {
+                console.error('Data carousel tidak ditemukan');
+            }
+        })
+        .catch(error => console.error('Error saat mengambil data carousel:', error.message));
+    }
 
-        // If editing, populate the form with existing carousel data
-        const carouselId = '{{ isset($carousel) ? $carousel->id : '' }}';
+    // Form submission
+    document.getElementById('carousel-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const formData = new FormData(this);
+        const carouselId = document.getElementById('carousel-id').value;
+
+        let url = 'http://127.0.0.1:8000/api/dashboard/carousel';
+        let method = 'POST';
+
         if (carouselId) {
-            fetch(`http://127.0.0.1:8000/api/carousel/${carouselId}`, {
-                headers: {
-                    'Authorization': `Bearer ${getAuthToken()}`
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(carouselData => {
-                if (carouselData.data) {
-                    const currentCarousel = carouselData.data;
-                    document.getElementById('carousel-title').value = currentCarousel.title;
-                    previewImage.src = currentCarousel.image ? `{{ asset('storage/image/') }}/${currentCarousel.image}` : '#';
-                } else {
-                    console.error('Data carousel tidak ditemukan');
-                }
-            })
-            .catch(error => console.error('Error saat mengambil data carousel:', error.message));
+            url += `/${carouselId}`;
+            method = 'PUT';
         }
 
-        // Form submission
-        document.getElementById('carousel-form').addEventListener('submit', function(event) {
-            event.preventDefault();
+        fetch(url, {
+            method: method,
+            headers: {
+                'Authorization': `Bearer ${getAuthToken()}`,
+                'Accept': 'application/json'
+            },
+            body: formData,
+        })
+        .then(async response => {
+            const contentType = response.headers.get('content-type');
+            const text = await response.text();
 
-            const formData = new FormData(this);
-            const carouselId = document.getElementById('carousel-id').value;
-
-            let url = 'http://127.0.0.1:8000/api/dashboard/carousel';
-            let method = 'POST';
-
-            if (carouselId) {
-                url += `/${carouselId}`;
-                method = 'PUT';
+            if (!response.ok) {
+                throw new Error(`Respon jaringan tidak berhasil: ${text}`);
             }
 
-            fetch(url, {
-                method: method,
-                headers: {
-                    'Authorization': `Bearer ${getAuthToken()}`,
-                    'Accept': 'application/json'
-                },
-                body: formData,
-            })
-            .then(async response => {
-                const contentType = response.headers.get('content-type');
-                const text = await response.text();
-
-                if (!response.ok) {
-                    throw new Error(`Respon jaringan tidak berhasil: ${text}`);
-                }
-
-                if (contentType && contentType.includes('application/json')) {
-                    return JSON.parse(text);
-                } else {
-                    throw new Error(`Diharapkan JSON, dapatkan ${contentType}: ${text}`);
-                }
-            })
-            .then(data => {
-                console.log('Sukses:', data);
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil!',
-                    text: 'Data berhasil disimpan!',
-                }).then(() => {
-                    window.location.href = '/carouseltable'; // Redirect to carousel table after successful submission
-                });
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Something went wrong!',
-                    footer: `<a href="#">Why do I have this issue?</a>`
-                });
+            if (contentType && contentType.includes('application/json')) {
+                return JSON.parse(text);
+            } else {
+                throw new Error(`Diharapkan JSON, dapatkan ${contentType}: ${text}`);
+            }
+        })
+        .then(data => {
+            console.log('Sukses:', data);
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: 'Data berhasil disimpan!',
+            }).then(() => {
+                window.location.href = '/carouseltable'; // Redirect to carousel table after successful submission
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+                footer: `<a href="#">Why do I have this issue?</a>`
             });
         });
     });
+});
+
     </script>
 @endsection

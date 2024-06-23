@@ -319,7 +319,7 @@
 
 <div class=" lg:absolute md:absolute lg:w-384 md:w-52 sm:w-80 lg:mr-120 md:mr-96" id="kontak">
     <a href="#"
-        <h5 class="mb-2 lg:text-4xl md:text-20 font-medium tracking-tight text-coklat">Konsultasikan Sekarang</h5>
+        <h5 class="mb-2 lg:text-4xl md:text-20 font-medium tracking-tight text-coklat sm:ml-16 lg:ml-0 md:ml-0">Konsultasikan Sekarang</h5>
     </a><br>
     <a href="https://wa.me/62895352224863" type="button" class="mt-5 text-krem bg-coklat font-medium rounded-lg lg:text-sm md:text-10 sm:text-8 px-5 py-2.5 text-center inline-flex sm:ml-24 lg:ml-0 md:ml-0 me-2 mb-2">
         <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" class=" lg:w-7 lg:h-7 md:w-5 md:h-5 sm:w-4 sm:h-4 me-2" viewBox="0 0 50 50"

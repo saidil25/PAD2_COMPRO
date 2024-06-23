@@ -35,6 +35,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/dashboard/catalogs', [DashboardCatalogController::class, 'index']);
     Route::get('/dashboard/catalogs/{id}', [DashboardCatalogController::class, 'show']);
     Route::get('/dashboard/carousel', [DashboardCarouselController::class, 'index']);
+    Route::get('/dashboard/carousel/{id}', [DashboardCarouselController::class, 'show']);
     
     Route::post('/dashboard/catalogs', [DashboardCatalogController::class, 'store']);
     Route::put('/dashboard/catalogs/{id}', [DashboardCatalogController::class, 'update'])->middleware('post-owner');

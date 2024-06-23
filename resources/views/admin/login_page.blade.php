@@ -63,9 +63,9 @@
     <div class="flex flex-col m-6 space-y-8 bg-white shadow-2xl rounded-2xl md:flex-row md:space-y-0">
       <!-- left side -->
       <div class="flex flex-col justify-center p-8 md:p-14">
-        <span class="mb-3 text-4xl font-bold">Welcome back</span>
+        <span class="mb-3 text-4xl font-bold">Login Administrator</span>
         <span class="font-light text-gray-400 mb-8">
-          Welcome back! Please enter your details
+        Masuk ke Dashboard Admin
         </span>
         <div class="py-4">
           <span class="mb-2 text-md">Email</span>

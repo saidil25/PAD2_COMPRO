@@ -1,13 +1,15 @@
 @extends('admin.dashboard_admin')
 
 @section('admin_content')
-    <h1 class="text-3xl font-bold text-coklat mb-2 text-center">Catalog Form</h1>
+<h1 class="text-3xl font-bold text-coklat mb-2 text-center">Catalog Form</h1>
     <div class="w-full h-auto mt-10 flex flex-col items-center p-6 justify-center bg-white border border-gray-200 rounded-lg shadow">
-        <form action="http://127.0.0.1:8000/dashboard/catalogs" method="POST" enctype="multipart/form-data" class="w-full" id="catalog-form">
+        <form action="{{ isset($catalog) ? url('/dashboard/catalogs/' . $catalog->id) : url('/dashboard/catalogs') }}" method="POST" enctype="multipart/form-data" class="w-full" id="catalog-form">
             @csrf
-            <!-- Hidden input for catalog ID -->
-            <input type="hidden" id="catalog-id" name="catalog_id" value="{{ isset($catalog) ? $catalog->id : '' }}">
-            
+            @isset($catalog)
+                @method('PUT')
+                <input type="hidden" id="catalog-id" name="catalog_id" value="{{ $catalog->id }}">
+            @endisset
+
             <!-- Title Field -->
             <div class="mb-6">
                 <label for="product-title" class="block mb-2 text-xl font-bold text-coklat">Input Title</label>
@@ -46,134 +48,152 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const getAuthToken = () => localStorage.getItem('authToken');
+document.addEventListener('DOMContentLoaded', function () {
+    const getAuthToken = () => localStorage.getItem('authToken');
 
-            // Fetch categories and populate select options
-            fetch('http://127.0.0.1:8000/api/categories', {
-                headers: {
-                    'Authorization': `Bearer ${getAuthToken()}`
-                }
-            })
-            .then(response => response.json())
-            .then(responseData => {
-                if (Array.isArray(responseData.data)) {
-                    const categories = responseData.data;
-                    const categorySelect = document.getElementById('category-select');
+    // Fetch categories and populate select options
+    fetch('http://127.0.0.1:8000/api/categories', {
+        headers: {
+            'Authorization': `Bearer ${getAuthToken()}`
+        }
+    })
+    .then(response => response.json())
+    .then(responseData => {
+        if (Array.isArray(responseData.data)) {
+            const categories = responseData.data;
+            const categorySelect = document.getElementById('category-select');
 
-                    categories.forEach(category => {
-                        const option = document.createElement('option');
-                        option.value = category.id;
-                        option.textContent = category.name;
-                        categorySelect.appendChild(option);
-                    });
-
-                    // If editing, set selected category based on catalog data
-                    const catalogId = '{{ isset($catalog) ? $catalog->id : '' }}';
-                    if (catalogId) {
-                        fetch(`http://127.0.0.1:8000/api/catalogs/${catalogId}`, {
-                            headers: {
-                                'Authorization': `Bearer ${getAuthToken()}`
-                            }
-                        })
-                        .then(response => response.json())
-                        .then(catalogData => {
-                            if (catalogData.data) {
-                                const currentCatalog = catalogData.data;
-                                document.getElementById('product-title').value = currentCatalog.title;
-                                document.getElementById('product-description').value = currentCatalog.description;
-                                categorySelect.value = currentCatalog.category_id.toString();
-                                document.getElementById('preview-image').src = currentCatalog.image ? `{{ asset('storage/image/') }}/${currentCatalog.image}` : '#';
-                            } else {
-                                console.error('Data katalog tidak ditemukan');
-                            }
-                        })
-                        .catch(error => console.error('Error saat mengambil data katalog:', error));
-                    }
-                } else {
-                    console.error('Response data.data bukan array:', responseData.data);
-                }
-            })
-            .catch(error => console.error('Error saat mengambil kategori:', error));
-
-            // Preview image functionality
-            const dropzone = document.getElementById('dropzone-file');
-            const previewImage = document.getElementById('preview-image');
-
-            dropzone.addEventListener('change', () => {
-                const file = dropzone.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.readAsDataURL(file);
-                    reader.onload = () => {
-                        previewImage.src = reader.result;
-                    };
-                } else {
-                    previewImage.src = "#";
-                }
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category.id;
+                option.textContent = category.name;
+                categorySelect.appendChild(option);
             });
 
-            // Form submission
-            document.getElementById('catalog-form').addEventListener('submit', function(event) {
-                event.preventDefault();
+            // If editing, set selected category based on catalog data
+            const catalogId = '{{ isset($catalog) ? $catalog->id : '' }}';
+            if (catalogId) {
+                fetch(`http://127.0.0.1:8000/api/catalogs/${catalogId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${getAuthToken()}`
+                    }
+                })
+                .then(response => response.json())
+                .then(catalogData => {
+                    if (catalogData.data) {
+                        const currentCatalog = catalogData.data;
+                        document.getElementById('product-title').value = currentCatalog.title;
+                        document.getElementById('product-description').value = currentCatalog.description;
+                        categorySelect.value = currentCatalog.category_id.toString();
+                        document.getElementById('preview-image').src = currentCatalog.image ? `{{ asset('storage/image/') }}/${currentCatalog.image}` : '#';
 
-                const formData = new FormData(this);
-                const catalogId = document.getElementById('catalog-id').value;
-                const categorySelect = document.getElementById('category-select');
-                const categoryName = categorySelect.options[categorySelect.selectedIndex].text;
+                        // Update catalog-id input value
+                        const catalogIdInput = document.getElementById('catalog-id');
+                        if (catalogIdInput) {
+                            catalogIdInput.value = catalogId;
+                        } else {
+                            console.error('Element with ID "catalog-id" not found.');
+                        }
+                    } else {
+                        console.error('Data katalog tidak ditemukan');
+                    }
+                })
+                .catch(error => console.error('Error saat mengambil data katalog:', error));
+            }
+        } else {
+            console.error('Response data.data bukan array:', responseData.data);
+        }
+    })
+    .catch(error => console.error('Error saat mengambil kategori:', error));
 
-                formData.append('category', categoryName);
+    // Preview image functionality
+    const dropzone = document.getElementById('dropzone-file');
+    const previewImage = document.getElementById('preview-image');
 
-                let url = 'http://127.0.0.1:8000/api/dashboard/catalogs';
-                let method = 'POST';
+    if (dropzone) {
+        dropzone.addEventListener('change', () => {
+            const file = dropzone.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => {
+                    previewImage.src = reader.result;
+                };
+            } else {
+                previewImage.src = "#";
+            }
+        });
+    } else {
+        console.error('Element with ID "dropzone-file" not found.');
+    }
 
-                if (catalogId) {
-                    url += `/${catalogId}`;
-                    method = 'PUT';
+    // Form submission
+    const catalogForm = document.getElementById('catalog-form');
+    if (catalogForm) {
+        catalogForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(this);
+            const catalogId = document.getElementById('catalog-id') ? document.getElementById('catalog-id').value : null;
+            const categorySelect = document.getElementById('category-select');
+            const categoryName = categorySelect.options[categorySelect.selectedIndex].text;
+
+            formData.append('category', categoryName);
+
+            let url = 'http://127.0.0.1:8000/api/dashboard/catalogs';
+            let method = 'POST';
+
+            if (catalogId) {
+                url += `/${catalogId}`;
+                method = 'PUT';
+            }
+
+            fetch(url, {
+                method: method,
+                headers: {
+                    'Authorization': `Bearer ${getAuthToken()}`,
+                    'Accept': 'application/json'
+                },
+                body: formData,
+            })
+            .then(async response => {
+                const contentType = response.headers.get('content-type');
+                const text = await response.text();
+
+                if (!response.ok) {
+                    throw new Error(`Respon jaringan tidak berhasil: ${text}`);
                 }
 
-                fetch(url, {
-                    method: method,
-                    headers: {
-                        'Authorization': `Bearer ${getAuthToken()}`,
-                        'Accept': 'application/json'
-                    },
-                    body: formData,
-                })
-                .then(async response => {
-                    const contentType = response.headers.get('content-type');
-                    const text = await response.text();
-
-                    if (!response.ok) {
-                        throw new Error(`Respon jaringan tidak berhasil: ${text}`);
-                    }
-
-                    if (contentType && contentType.includes('application/json')) {
-                        return JSON.parse(text);
-                    } else {
-                        throw new Error(`Diharapkan JSON, dapatkan ${contentType}: ${text}`);
-                    }
-                })
-                .then(data => {
-                    console.log('Sukses:', data);
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Berhasil',
-                        text: 'Data berhasil disimpan!',
-                    }).then(() => {
-                        window.location.href = '/catalogtable';
-                    });
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: `Error menyimpan data: ${error.message}`,
-                        footer: '<a href="#">Why do I have this issue?</a>'
-                    });
+                if (contentType && contentType.includes('application/json')) {
+                    return JSON.parse(text);
+                } else {
+                    throw new Error(`Diharapkan JSON, dapatkan ${contentType}: ${text}`);
+                }
+            })
+            .then(data => {
+                console.log('Sukses:', data);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil',
+                    text: 'Data berhasil disimpan!',
+                }).then(() => {
+                    window.location.href = '/catalogtable';
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: `Error menyimpan data: ${error.message}`,
+                    footer: '<a href="#">Why do I have this issue?</a>'
                 });
             });
         });
+    } else {
+        console.error('Element with ID "catalog-form" not found.');
+    }
+});
+
     </script>
 @endsection

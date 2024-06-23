@@ -27,10 +27,12 @@ use App\Http\Controllers\CarouselTableController;
 //     return view('user/layout');
 // });
 
-Route::get('/user', [LayoutController::class, 'index'])->name('user.index');
+Route::get('/', [LayoutController::class, 'index'])->name('user.index');
 Route::get('/login', [LoginController::class, 'index'])->name('admin.index');
 Route::get('/admin', [DashboardAdminController::class, 'index'])->name('admin.index');
 Route::get('/carouselform', [CarouselCrudController::class, 'index'])->name('admin.index');
 Route::get('/catalogform', [CatalogCrudController::class, 'index'])->name('admin.index');
 Route::get('/carouseltable', [CarouselTableController::class, 'index'])->name('admin.index');
 Route::get('/catalogtable', [CatalogsTableController::class, 'index'])->name('admin.index');
+Route::get('/dashboard/catalogs/{id}/edit', [CatalogCrudController::class, 'edit'])->name('catalogs.edit');
+Route::get('/dashboard/carousel/{id}/edit', [CarouselCrudController::class, 'edit'])->name('carousel.edit');

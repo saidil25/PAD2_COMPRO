@@ -15,6 +15,11 @@ class DashboardCarouselController extends Controller
         return CarouselResource::collection($carousels);
     }
 
+    public function show($id) {
+        $carousel = Carousel::findOrFail($id);
+        return new CarouselResource($carousel->loadMissing(['author:id,email,username']));
+    }
+
     public function store(Request $request) {
         $validated = $request->validate([
             'title' => 'required|max:255',
