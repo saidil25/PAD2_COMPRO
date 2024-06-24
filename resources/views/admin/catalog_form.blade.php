@@ -145,7 +145,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (catalogId) {
                 url += `/${catalogId}`;
-                method = 'PUT';
+                method = 'POST'; // Changed to POST for simplicity in handling PUT requests with FormData
+                formData.append('_method', 'PUT'); // Laravel's way to spoof PUT request
             }
 
             fetch(url, {
@@ -175,7 +176,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 Swal.fire({
                     icon: 'success',
                     title: 'Berhasil',
-                    text: 'Data berhasil disimpan!',
+                    text: catalogId ? 'Data berhasil diperbarui!' : 'Data berhasil disimpan!',
                 }).then(() => {
                     window.location.href = '/catalogtable';
                 });
@@ -194,6 +195,7 @@ document.addEventListener('DOMContentLoaded', function () {
         console.error('Element with ID "catalog-form" not found.');
     }
 });
+
 
     </script>
 @endsection

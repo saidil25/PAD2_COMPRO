@@ -28,10 +28,10 @@ class DashboardCatalogController extends Controller
             'title' => 'required|max:255',
             'description' => 'required',
             'category' => 'required|exists:categories,name',
-            'file' => 'image|mimes:jpeg,png,jpg|max:10000'
+            'file' => 'image|mimes:jpeg,png,jpg|max:5120'
         ], [
             'file.mimes' => 'File harus berupa file gambar yang valid (jpeg, png, jpg)',
-            'file.max' => 'Ukuran file tidak boleh lebih dari 10MB'
+            'file.max' => 'Ukuran file tidak boleh lebih dari 5MB'
         ]);
     
         $result = null;

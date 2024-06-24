@@ -89,7 +89,8 @@
 
         if (carouselId) {
             url += `/${carouselId}`;
-            method = 'PUT';
+            method = 'POST'; // Changed to POST for simplicity in handling PUT requests with FormData
+            formData.append('_method', 'PUT'); // Laravel's way to spoof PUT request
         }
 
         fetch(url, {
@@ -135,6 +136,7 @@
         });
     });
 });
+
 
     </script>
 @endsection
