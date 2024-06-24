@@ -55,10 +55,10 @@ class DashboardCarouselController extends Controller
 
         $validated = $request->validate([
             'title' => 'max:255',
-            'file' => 'image|mimes:jpeg,png,jpg|max:10000'
+            'file' => 'image|mimes:jpeg,png,jpg|max:5120'
         ], [
             'file.mimes' => 'The file must be a valid image file (jpeg, png, jpg)',
-            'file.max' => 'The file size must not exceed 10MB'
+            'file.max' => 'The file size must not exceed 5MB'
         ]);
 
         $carousel = Carousel::findOrFail($id);
