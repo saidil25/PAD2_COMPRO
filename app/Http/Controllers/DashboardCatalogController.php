@@ -129,9 +129,6 @@ class DashboardCatalogController extends Controller
         }
     }
     
-    
-    
-
     public function destroy($id) {
         $catalog = Catalog::findOrFail($id);
 
@@ -170,6 +167,22 @@ class DashboardCatalogController extends Controller
         $catalogs = Catalog::with('category:id,name')
             ->where('category_id', $category->id)
             ->get();
+
+        return CatalogResource::collection($catalogs);
+    }
+
+    public function search(Request $request) {
+        $request->validate([
+            'title' => 'nullable|string|max:255',
+        ]);
+
+        $query = Catalog::with('category:id,name');
+
+        if ($request->filled('title')) {
+            $query->where('title', 'LIKE', '%' . $request->title . '%');
+        }
+
+        $catalogs = $query->get();
 
         return CatalogResource::collection($catalogs);
     }
