@@ -38,7 +38,7 @@
             
             <!-- Description Field -->
             <div class="mb-6">
-                <label for="product-description" class="block mb-2 text-xl font-bold text-coklat">Input Deskripsi</label>
+                <label for="product-description" class="block mb-2 text-xl font-bold text-coklat">Input Description</label>
                 <textarea id="product-description" name="description" class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-coklat focus:border-coklat"></textarea>
             </div>
             

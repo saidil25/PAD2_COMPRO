@@ -53,8 +53,8 @@
 
 
 <!-- Kelebihan -->
-<div id="kelebihan" class="w-full h-auto mt-32 flex flex-col items-center justify-center">
-    <h1 class="lg:text-2xl md:text-18 sm:text-xl font-bold text-coklat">KELEBIHAN ATHA MEBEL</h1>
+<div id="kelebihan" class="w-full h-auto mt-16 flex flex-col items-center justify-center">
+    <h1 class="lg:text-3xl md:text-2xl sm:text-xl font-bold text-coklat">KELEBIHAN ATHA MEBEL</h1>
     <div class="grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-2 gap-5 mt-16">
     <div class="col-span-2 md:col-span-1 flex justify-center">
             <a class=" lg:w-card lg:h-card md: w-347 md:h-233  w p-6 bg-krem border border-gray-200 rounded-lg shadow flex flex-col justify-center items-center">
@@ -95,11 +95,10 @@
 
 
 <!-- Kategori -->
-<div id="catalog" class="w-full h-auto mt-32 flex flex-col items-center justify-center">
-    <h1 class="lg:text-2xl md:text-18 sm:text-xl font-bold text-coklat">CATALOG</h1>
-    <h4 class="text-15 font-medium text-coklat mt-10 mr-auto ml-44 md:hidden sm:hidden lg:block">Pilihan Categori</h4>
+<div id="catalog" class="w-full h-auto mt-10 flex flex-col items-center justify-center bg-choco bg-opacity-50">
+    <h1 class="lg:text-3xl md:text-2xl sm:text-xl font-bold text-coklat mt-10">KATALOG</h1>
 
-    <div id="category-buttons-container" class="overflow-y-auto overflow-x-auto w-full lg:w-1094 md:w-677 sm:w-384">
+    <div id="category-buttons-container" class="mt-3 overflow-y-auto overflow-x-auto w-full lg:w-1094 md:w-677 sm:w-384">
         <div id="category-buttons" class="flex gap-5 mt-3 sm:hidden lg:block md:block">
             <!-- Dynamic category buttons will be inserted here -->
         </div>
@@ -182,7 +181,7 @@
     function createCard(title, image, category, description) {
         const container = document.getElementById('catalog-container');
         const button = document.createElement('button');
-        button.className = 'max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 lg:h-72 lg:w-96 md:w-347 md:h-250 sm:w-247 sm:h-192';
+        button.className = 'max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 lg:h-72 lg:w-96 md:w-347 md:h-250 sm:w-247 sm:h-192 mb-5';
         button.onclick = () => openModal(title, `http://127.0.0.1:8000/storage/image/${image}`, description);
 
         button.innerHTML = `
@@ -250,10 +249,10 @@
     // Initialize categories and catalog on page load
     window.onload = async () => {
         await initializeCategories();
-        const topPicsButton = [...document.querySelectorAll('.filter-btn')].find(btn => btn.getAttribute('data-category') === 'Top Pics');
+        const topPicsButton = [...document.querySelectorAll('.filter-btn')].find(btn => btn.getAttribute('data-category') === 'Top Pick');
         if (topPicsButton) {
             setActiveButton(topPicsButton);
-            initializeCatalog('Top Pics');
+            initializeCatalog('Top Pick');
         } else {
             await initializeCatalog();
         }
@@ -312,15 +311,16 @@
 </div>
 
 <!--kontak-->
-<div class="w-full h-auto mt-32 flex flex-col items-center justify-center">
+<div class="w-full h-auto mt-0 flex flex-col items-center justify-center">
     <img src="../img/Group 18.png" class="lg:w-777 lg:h-587 md:h-325 ml-auto lg:block md:block sm:hidden">
     <img src="../img/Group 21.png" class="lg:w-777 lg:h-587 md:h-325 sm:h-325 ml-auto lg:hidden md:hidden sm:block">
 
 
 <div class=" lg:absolute md:absolute lg:w-384 md:w-52 sm:w-80 lg:mr-120 md:mr-96" id="kontak">
     <a href="#"
-        <h5 class="mb-2 lg:text-4xl md:text-20 font-medium tracking-tight text-coklat sm:ml-16 lg:ml-0 md:ml-0">Konsultasikan Sekarang</h5>
-    </a><br>
+        <h5 class="mb-2 lg:text-4xl md:text-20 font-bold tracking-tight text-coklat sm:ml-10 lg:ml-0 md:ml-0">Hubungi Kami Sekarang Untuk</h5>
+        <h5 class="mb-2 lg:text-4xl md:text-20 font-bold tracking-tight text-coklat sm:ml-16 lg:ml-0 md:ml-0">Informasi Lebih Lanjut</h5>
+    </a>
     <a href="https://wa.me/62895352224863" type="button" class="mt-5 text-krem bg-coklat font-medium rounded-lg lg:text-sm md:text-10 sm:text-8 px-5 py-2.5 text-center inline-flex sm:ml-24 lg:ml-0 md:ml-0 me-2 mb-2">
         <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" class=" lg:w-7 lg:h-7 md:w-5 md:h-5 sm:w-4 sm:h-4 me-2" viewBox="0 0 50 50"
         style="fill:#FFFFFF;">

@@ -20,7 +20,7 @@
             </div>
             <!-- Title Field -->
             <div class="mb-6">
-                <label for="carousel-title" class="block mb-2 text-xl font-bold text-coklat">Input Title</label>
+                <label for="carousel-title" class="block mb-2 text-xl font-bold text-coklat">Input Description</label>
                 <input type="text" id="carousel-title" name="title" class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-coklat focus:border-coklat" required>
             </div>
             

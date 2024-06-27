@@ -22,7 +22,8 @@ export default {
         "cokmud" : '#6D4E46',
         "c1" : '#65443AE5',
         "c2" : '#7C6058CC',
-        "c3" : '#A08E8980'
+        "c3" : '#A08E8980',
+        "choco" : "#F1E5D1"
       },
       height : {
         "81" : '605px',
@@ -74,8 +75,9 @@ export default {
       },
       margin: {
         "120" : '640px',
-        "98" : '98px'
-      }
+        "98" : '98px',
+        "400" : "575px"
+      },
     },
   },
   plugins: [

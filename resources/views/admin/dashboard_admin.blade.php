@@ -44,8 +44,8 @@
             </a>
          </li>
          <li>
-            <a href="#" onclick="logout()" class="flex items-center p-2 text-krem rounded-lg hover:text-white hover:bg-coklat group">
-            <svg class="flex-shrink-0 w-6 h-6 text-krem transition duration-75 group-hover:text-white"
+            <a href="#" onclick="logout()" class="flex items-center p-2 text-black rounded-lg hover:text-white hover:bg-red-600 group mt-10 bg-white">
+            <svg class="flex-shrink-0 w-6 h-6 text-black transition duration-75 group-hover:text-white"
                width="800px" height="800px"
                viewBox="0 0 24 24"
                fill="currentColor"
