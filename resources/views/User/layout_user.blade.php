@@ -26,7 +26,7 @@
             <img class="hidden md:block mr-6 h-5" src="../img/Line 1.png" alt="" /> <!-- Menambah class hidden md:block -->
             <div class="hidden md:flex space-x-6"> <!-- Menambah class ml-6 untuk mengurangi jarak -->
                 <a href="#" class="hover:text-coklat">Beranda</a>
-                <a href="#catalog" class="hover:text-coklat">Catalog</a>
+                <a href="#catalog" class="hover:text-coklat">Katalog</a>
                 <a href="#kontak" class="hover:text-coklat">Kontak</a>
             </div>
         </div>
@@ -37,7 +37,7 @@
                 <a href="#" class="block hover:text-coklat">Beranda</a>
             </li>
             <li class="py-2">
-                <a href="#catalog" class="block hover:text-coklat">Catalog</a>
+                <a href="#catalog" class="block hover:text-coklat">Katalog</a>
             </li>
             <li class="py-2">
                 <a href="#kontak" class="block hover:text-coklat">Kontak</a>
@@ -85,7 +85,7 @@
             <h2 class="text-krem text-lg font-semibold mb-4 uppercase">Atha Mebel</h2>
             <ul class="text-krem">
               <li class="mb-2 lg:text-lg md:text-14">
-                <a href="#" class="">Yogyakarta<br>Jl. Lorem ipsum dolor sit amet consectetur adipiscing 55010</a>
+                <a href="#" class="">Jawa Tengah<br>Paesan, Mireng, Trucuk, Klaten</a>
               </li>
               <li class="mb-2 mt-3 lg:text-lg md:text-14">
                 <a href="#" class="">Email : athaya040716@gmail.com<br>Phone : 0895352224863</a>

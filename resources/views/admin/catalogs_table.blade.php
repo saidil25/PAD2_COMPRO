@@ -4,9 +4,9 @@
 <div class="m-6">
     <div class="bg-white shadow-md rounded-lg overflow-hidden py-3"> 
         <form class="max-w-lg mx-auto" id="search-form">
-            <div class="flex">
+            <div class="flex flex-col sm:flex-row">
                 <label for="search-dropdown" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
-                <button id="dropdown-button" class="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600" type="button">
+                <button id="dropdown-button" class="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-t-lg sm:rounded-t-none sm:rounded-l-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600" type="button">
                     <span id="dropdown-button-text">All categories</span>
                     <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
@@ -17,9 +17,9 @@
                         <!-- Dynamic categories will be inserted here -->
                     </ul>
                 </div>
-                <div class="relative w-full">
-                    <input type="search" id="search-dropdown" class="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-e-lg border-s-gray-50 border-s-2 border border-gray-300 focus:ring-coklat focus:border-coklat" placeholder="Search....." required />
-                    <button type="submit" class="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-coklat rounded-e-lg border border-coklat hover:bg-coklat focus:ring-4 focus:outline-none focus:ring-coklat">
+                <div class="relative w-full mt-2 sm:mt-0">
+                    <input type="search" id="search-dropdown" class="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-b-lg sm:rounded-b-none sm:rounded-r-lg border-gray-300 focus:ring-coklat focus:border-coklat" placeholder="Search....." required />
+                    <button type="submit" class="absolute top-0 right-0 p-2.5 text-sm font-medium h-full text-white bg-coklat rounded-r-lg border border-coklat hover:bg-coklat focus:ring-4 focus:outline-none focus:ring-coklat">
                         <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                         </svg>
@@ -30,7 +30,7 @@
         </form>
     </div>
     <div class="bg-white shadow-md rounded-lg overflow-hidden mt-3">
-        <div class="p-6">
+        <div class="p-6 overflow-x-auto">
             <table id="dataTable" class="w-full text-sm text-center text-gray-500 dark:text-gray-400 border-collapse">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
@@ -80,19 +80,31 @@
     }
 
     async function fetchData(category = null, searchQuery = '') {
-        const token = localStorage.getItem('authToken'); // 
-        let url = 'http://127.0.0.1:8000/api/catalogs';
-        if (category) {
-            url = `http://127.0.0.1:8000/api/catalogs/filter?category=${category}`;
-        }
-        if (searchQuery) {
-            url = `http://127.0.0.1:8000/api/admin/search?title=${encodeURIComponent(searchQuery)}`;
-        }
+    const token = localStorage.getItem('authToken'); 
+    let url = 'http://127.0.0.1:8000/api/catalogs';
+    if (category) {
+        url = `http://127.0.0.1:8000/api/catalogs/filter?category=${category}`;
+    }
+    if (searchQuery) {
+        url = `http://127.0.0.1:8000/api/admin/search?title=${encodeURIComponent(searchQuery)}`;
+    }
 
-        const response = await fetch(url);
+    try {
+        const response = await fetch(url, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
         const data = await response.json();
         populateTable(data.data);
+    } catch (error) {
+        console.error('Fetch data error:', error);
     }
+}
+
 
     async function initializeCategories() {
         const categories = await fetchCategories();
@@ -131,7 +143,7 @@
             row.innerHTML = `
                 <td class="px-6 py-4 border-b">${item.title}</td>
                 <td class="px-6 py-4 border-b">${item.category.name}</td>
-                <td class="px-6 py-4 border-b">${imageUrl ? `<img src="${imageUrl}" alt="${item.title}" class="w-64 h-64 object-cover mx-auto">` : 'No Image'}</td>
+                <td class="px-6 py-4 border-b">${imageUrl ? `<img src="${imageUrl}" alt="${item.title}" class="w-full max-w-xs h-auto mx-auto">` : 'No Image'}</td>
                 <td class="px-6 py-4 text-right border-b"><a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" onclick="editItem(${item.id})">Edit</a></td>
                 <td class="px-6 py-4 text-right border-b"><a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline" onclick="deleteItem(${item.id})">Delete</a></td>
             `;
@@ -141,7 +153,7 @@
     }
 
     function editItem(id) {
-        window.location.href = `/catalogform/${id}`;
+        window.location.href = `/catalogs/${id}`;
     }
 
     function deleteItem(id) {

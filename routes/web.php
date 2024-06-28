@@ -34,5 +34,5 @@ Route::get('/carouselform', [CarouselCrudController::class, 'index'])->name('adm
 Route::get('/catalogform', [CatalogCrudController::class, 'index'])->name('admin.index');
 Route::get('/carouseltable', [CarouselTableController::class, 'index'])->name('admin.index');
 Route::get('/catalogtable', [CatalogsTableController::class, 'index'])->name('admin.index');
-Route::get('/dashboard/catalogs/{id}', [CatalogCrudController::class, 'edit'])->name('catalogs.edit');
-Route::get('/dashboard/carousel/{id}', [CarouselCrudController::class, 'edit'])->name('carousel.edit');
+Route::get('/catalogs/{id}', [CatalogCrudController::class, 'edit'])->name('catalogs.edit');
+Route::get('/carousel/{id}', [CarouselCrudController::class, 'edit'])->name('carousel.edit');

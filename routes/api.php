@@ -31,13 +31,12 @@ Route::post('/login', [AuthenticationController::class, 'login']);
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/logout', [AuthenticationController::class, 'logout']);
     Route::get('/token-info', [AuthenticationController::class, 'tokenInfo']);
-
     Route::get('/dashboard/catalogs', [DashboardCatalogController::class, 'index']);
     Route::get('/dashboard/catalogs/{id}', [DashboardCatalogController::class, 'show']);
     Route::get('/dashboard/carousel', [DashboardCarouselController::class, 'index']);
     Route::get('/dashboard/carousel/{id}', [DashboardCarouselController::class, 'show']);
-    Route::get('/admin/search', [DashboardCatalogController::class, 'search']);
     Route::get('/admin/filter', [DashboardCatalogController::class, 'filter']);
+    Route::get('/admin/search' , [DashboardCatalogController::class, 'search']);
     
     Route::post('/dashboard/catalogs', [DashboardCatalogController::class, 'store']);
     Route::put('/dashboard/catalogs/{id}', [DashboardCatalogController::class, 'update'])->middleware('post-owner');

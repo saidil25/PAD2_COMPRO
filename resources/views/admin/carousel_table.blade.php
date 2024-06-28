@@ -57,7 +57,7 @@
     }
 
     function editItem(id) {
-        window.location.href = `/carouselform/${id}`;
+        window.location.href = `/carousel/${id}`;
     }
 
     function deleteItem(id) {
