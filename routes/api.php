@@ -8,6 +8,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\DashboardCatalogController;
 use App\Http\Controllers\DashboardCarouselController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,17 +32,24 @@ Route::post('/login', [AuthenticationController::class, 'login']);
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/logout', [AuthenticationController::class, 'logout']);
     Route::get('/token-info', [AuthenticationController::class, 'tokenInfo']);
-    Route::get('/dashboard/catalogs', [DashboardCatalogController::class, 'index']);
+    
     Route::get('/dashboard/catalogs/{id}', [DashboardCatalogController::class, 'show']);
-    Route::get('/dashboard/carousel', [DashboardCarouselController::class, 'index']);
     Route::get('/dashboard/carousel/{id}', [DashboardCarouselController::class, 'show']);
+
     Route::get('/admin/filter', [DashboardCatalogController::class, 'filter']);
     Route::get('/admin/search' , [DashboardCatalogController::class, 'search']);
+
+    Route::get('/administrator' , [UserController::class, 'index']);
+    Route::post('/administrator' , [UserController::class, 'store']);
+    Route::put('/administrator/{id}' , [UserController::class, 'update']);
+    Route::delete('/administrator/{id}' , [UserController::class, 'destroy']);
     
+    Route::get('/dashboard/catalogs', [DashboardCatalogController::class, 'index']);
     Route::post('/dashboard/catalogs', [DashboardCatalogController::class, 'store']);
     Route::put('/dashboard/catalogs/{id}', [DashboardCatalogController::class, 'update'])->middleware('post-owner');
     Route::delete('/dashboard/catalogs/{id}', [DashboardCatalogController::class, 'destroy'])->middleware('post-owner');
 
+    Route::get('/dashboard/carousel', [DashboardCarouselController::class, 'index']);
     Route::post('/dashboard/carousel', [DashboardCarouselController::class, 'store']);
     Route::put('/dashboard/carousel/{id}', [DashboardCarouselController::class, 'update'])->middleware('carousel-owner');
     Route::delete('/dashboard/carousel/{id}', [DashboardCarouselController::class, 'destroy'])->middleware('carousel-owner');
