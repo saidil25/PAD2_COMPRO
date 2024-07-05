@@ -45,6 +45,8 @@
                     <!-- Dynamic content will be inserted here -->
                 </tbody>
             </table>
+            <div class="pagination mt-4" id="pagination"></div>
+
         </div>
     </div>
 </div>

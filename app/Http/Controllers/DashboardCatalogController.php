@@ -33,7 +33,7 @@ class DashboardCatalogController extends Controller
             'file' => 'image|mimes:jpeg,png,jpg|max:5120'
         ], [
             'file.mimes' => 'File harus berupa file gambar yang valid (jpeg, png, jpg)',
-            'file.max' => 'Ukuran file tidak boleh lebih dari 5MB'
+            'file.max' => 'Ukuran file tidak boleh lebih dari 2MB'
         ]);
     
         $result = null;
@@ -69,10 +69,10 @@ class DashboardCatalogController extends Controller
                 'title' => 'nullable|max:255',
                 'description' => 'nullable',
                 'category' => 'nullable|exists:categories,name',
-                'file' => 'nullable|image|mimes:jpeg,png,jpg|max:10000'
+                'file' => 'nullable|image|mimes:jpeg,png,jpg|max:5120'
             ], [
                 'file.mimes' => 'File harus berupa file gambar yang valid (jpeg, png, jpg)',
-                'file.max' => 'Ukuran file tidak boleh lebih dari 10MB'
+                'file.max' => 'Ukuran file tidak boleh lebih dari 2MB'
             ]);
     
             $catalog = Catalog::findOrFail($id);
