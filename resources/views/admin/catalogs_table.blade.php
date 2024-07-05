@@ -36,7 +36,7 @@
                     <tr>
                         <th scope="col" class="px-6 py-3 border-b">Title</th>
                         <th scope="col" class="px-6 py-3 border-b">Category</th>
-                        <th scope="col" class="px-6 py-3 border-b">Image</th>
+                        <th scope="col" class="px-6 py-3 border-b ">Image</th>
                         <th scope="col" class="px-3 py-3 border-b"></th>
                         <th scope="col" class="px-6 py-3 border-b"><a href="/catalogform" class="bg-coklat hover:bg-krem hover:text-coklat text-white font-bold py-2 px-4 rounded">Tambah</a></th>
                     </tr>
@@ -45,8 +45,11 @@
                     <!-- Dynamic content will be inserted here -->
                 </tbody>
             </table>
-            <div class="pagination mt-4" id="pagination"></div>
-
+            <nav aria-label="Page navigation example" id="pagination-nav" class="my-4 flex justify-center">
+                <ul class="inline-flex -space-x-px text-sm items-center">
+                    <!-- Pagination buttons will be inserted here -->
+                </ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -72,7 +75,6 @@
             const searchQuery = document.getElementById('search-dropdown').value;
             await fetchData(null, searchQuery);
         });
-
     });
 
     async function fetchCategories() {
@@ -81,14 +83,14 @@
         return data.data;
     }
 
-    async function fetchData(category = null, searchQuery = '') {
+   async function fetchData(category = null, searchQuery = '', page = 1, limit = 10) {
     const token = localStorage.getItem('authToken'); 
-    let url = 'http://127.0.0.1:8000/api/catalogs';
+    let url = `http://127.0.0.1:8000/api/dashboard/catalogs?page=${page}&limit=${limit}`;
     if (category) {
-        url = `http://127.0.0.1:8000/api/catalogs/filter?category=${category}`;
+        url = `http://127.0.0.1:8000/api/admin/filter?category=${category}&page=${page}&limit=${limit}`;
     }
     if (searchQuery) {
-        url = `http://127.0.0.1:8000/api/admin/search?title=${encodeURIComponent(searchQuery)}`;
+        url = `http://127.0.0.1:8000/api/admin/search?title=${encodeURIComponent(searchQuery)}&page=${page}&limit=${limit}`;
     }
 
     try {
@@ -97,16 +99,23 @@
                 'Authorization': `Bearer ${token}`
             }
         });
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
+
         const data = await response.json();
+
+        if (!data.meta) {
+            throw new Error('Response does not contain pagination meta data');
+        }
+
         populateTable(data.data);
+        setupPagination(data.meta);
     } catch (error) {
         console.error('Fetch data error:', error);
     }
 }
-
 
     async function initializeCategories() {
         const categories = await fetchCategories();
@@ -154,6 +163,54 @@
         });
     }
 
+    function setupPagination(meta) {
+        const paginationNav = document.getElementById('pagination-nav');
+        const paginationUl = paginationNav.querySelector('ul');
+        paginationUl.innerHTML = ''; // Clear existing pagination buttons
+
+        // Generate Previous button
+        if (meta.current_page > 1) {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" data-page="${meta.current_page - 1}">&laquo; Previous</a>
+            `;
+            li.addEventListener('click', (event) => {
+                event.preventDefault();
+                const page = event.target.getAttribute('data-page');
+                fetchData(null, '', page);
+            });
+            paginationUl.appendChild(li);
+        }
+
+        // Generate page numbers
+        for (let i = 1; i <= meta.last_page; i++) {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight ${meta.current_page === i ? 'text-blue-600 border border-blue-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700' : 'text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'}" data-page="${i}">${i}</a>
+            `;
+            li.addEventListener('click', (event) => {
+                event.preventDefault();
+                const page = event.target.getAttribute('data-page');
+                fetchData(null, '', page);
+            });
+            paginationUl.appendChild(li);
+        }
+
+        // Generate Next button
+        if (meta.current_page < meta.last_page) {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" data-page="${meta.current_page + 1}">Next &raquo;</a>
+            `;
+            li.addEventListener('click', (event) => {
+                event.preventDefault();
+                const page = event.target.getAttribute('data-page');
+                fetchData(null, '', page);
+            });
+            paginationUl.appendChild(li);
+        }
+    }
+
     function editItem(id) {
         window.location.href = `/catalogs/${id}`;
     }
@@ -169,29 +226,27 @@
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.isConfirmed) {
-                const token = localStorage.getItem('authToken'); // Get token from local storage or cookie
+                const token = localStorage.getItem('authToken'); 
 
                 fetch(`http://127.0.0.1:8000/api/dashboard/catalogs/${id}`, {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
                         'Accept': 'application/json',
-                        'Authorization': `Bearer ${token}` // Use authentication token here
+                        'Authorization': `Bearer ${token}` 
                     },
                     body: JSON.stringify({
-                        _token: token // If needed for CSRF protection
+                        _token: token 
                     })
                 })
                 .then(response => {
                     if (response.ok) {
                         console.log('Item deleted with ID:', id);
-                        // Remove row from table after successful deletion
                         const row = document.querySelector(`#tableBody tr[data-id="${id}"]`);
                         if (row) {
                             row.remove();
                         }
-                        // Reload data after deleting item
-                        fetchData(); // Call fetchData to update the table
+                        fetchData(); 
                         Swal.fire(
                             'Deleted!',
                             'Your item has been deleted.',

@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 class CatalogController extends Controller
 {
     public function index(Request $request) {
-        $total = $request->query('total', 10);
+        $total = $request->query('total', 6);
         $catalogs = Catalog::with('category:id,name')->paginate($total);
         return CatalogResource::collection($catalogs);
     }
@@ -22,7 +22,7 @@ class CatalogController extends Controller
     }
 
     public function filter(Request $request) {
-        $request->validate([
+        $validated = $request->validate([
             'category' => 'required|string'
         ]);
 
@@ -32,9 +32,10 @@ class CatalogController extends Controller
             return response()->json(['error' => 'Category not found'], 404);
         }
 
+        $total = $request->query('total', 6);
         $catalogs = Catalog::with('category:id,name')
             ->where('category_id', $category->id)
-            ->get();
+            ->paginate($total);
 
         return CatalogResource::collection($catalogs);
     }

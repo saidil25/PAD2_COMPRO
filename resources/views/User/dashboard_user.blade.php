@@ -107,6 +107,11 @@
     <div id="catalog-container" class="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 gap-5 mt-3 opacity-0 transform scale-95 transition-all duration-700 ease-in-out">
         <!-- Dynamic content will be inserted here -->
     </div>
+    <nav aria-label="Page navigation example" id="pagination-nav">
+        <ul id="pagination" class="flex items-center -space-x-px h-8 text-sm">
+            <!-- Dynamic pagination links will be inserted here -->
+        </ul>
+    </nav>
 </div>
 
 <!-- Main modal -->
@@ -116,9 +121,7 @@
         <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
             <!-- Modal header -->
             <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                    Item Details
-                </h3>
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">Item Details</h3>
                 <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="default-modal" onclick="closeModal()">
                     <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
@@ -141,20 +144,30 @@
 </div>
 
 <script>
+    let currentCategory = null;
+
     async function fetchCategories() {
-        const response = await fetch('http://127.0.0.1:8000/api/categories');
-        const data = await response.json();
-        return data.data;
+        try {
+            const response = await fetch('http://127.0.0.1:8000/api/categories');
+            const data = await response.json();
+            return data.data;
+        } catch (error) {
+            console.error('Error fetching categories:', error);
+        }
     }
 
-    async function fetchData(category = null) {
-        let url = 'http://127.0.0.1:8000/api/catalogs';
-        if (category) {
-            url = `http://127.0.0.1:8000/api/catalogs/filter?category=${category}`;
+    async function fetchData(category = null, page = 1) {
+        try {
+            let url = `http://127.0.0.1:8000/api/catalogs?page=${page}`;
+            if (category) {
+                url = `http://127.0.0.1:8000/api/catalogs/filter?category=${category}&page=${page}`;
+            }
+            const response = await fetch(url);
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error fetching data:', error);
         }
-        const response = await fetch(url);
-        const data = await response.json();
-        return data.data;
     }
 
     function openModal(title1, imgSrc, description) {
@@ -207,21 +220,71 @@
         button.classList.remove('bg-krem', 'text-coklat');
     }
 
-    async function initializeCatalog(category = null) {
+    async function initializeCatalog(category = null, page = 1) {
+        currentCategory = category;  // Store the current category
         const container = document.getElementById('catalog-container');
         container.classList.remove('visible');  // Hide container before fetching new items
         await new Promise(resolve => setTimeout(resolve, 700));  // Wait for hide animation to complete
 
         container.innerHTML = '';  // Clear existing items
-        const items = await fetchData(category);
-        items.forEach(item => {
-            createCard(item.title, item.image, item.category.name, item.description);
-        });
+        const response = await fetchData(category, page);
+        if (response && response.data && response.meta) {
+            const items = response.data;
+            const meta = response.meta;
 
-        setTimeout(() => {
-            container.classList.add('visible');  // Show container with animation
-        }, 100);
+            items.forEach(item => {
+                createCard(item.title, item.image, item.category.name, item.description);
+            });
+
+            createPagination(meta); // Create pagination links
+
+            setTimeout(() => {
+                container.classList.add('visible');  // Show container with animation
+            }, 100);
+        } else {
+            console.error('Invalid response structure:', response);
+        }
     }
+
+    function createPagination(meta) {
+    console.log(meta); // Add this line to log meta information
+    const paginationContainer = document.getElementById('pagination');
+    paginationContainer.innerHTML = ''; // Clear existing pagination links
+
+    const createPageLink = (url, label, active) => {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = "#";
+
+        // Replace label text with icons for Next and Previous
+        if (label === 'Next &raquo;') {
+            a.innerHTML = '<i class="fas fa-angle-right"></i>';
+        } else if (label === '&laquo; Previous') {
+            a.innerHTML = '<i class="fas fa-angle-left"></i>';
+        } else {
+            a.innerHTML = label;
+        }
+
+        a.className = `flex items-center justify-center px-3 h-8 leading-tight ${active ? 'text-white bg-coklat border border-white' : 'text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700'} dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`;
+        if (url) {
+            a.onclick = (event) => {
+                event.preventDefault();
+                const page = new URL(url).searchParams.get('page');
+                initializeCatalog(currentCategory, parseInt(page));
+            };
+        } else {
+            a.classList.add('cursor-not-allowed');
+        }
+        li.appendChild(a);
+        return li;
+    };
+
+    meta.links.forEach(link => {
+        const pageLink = createPageLink(link.url, link.label, link.active);
+        paginationContainer.appendChild(pageLink);
+    });
+}
+
 
     async function initializeCategories() {
         const categories = await fetchCategories();
@@ -245,7 +308,7 @@
             container.classList.add('visible');
         }, 100);
     }
-
+    
     // Initialize categories and catalog on page load
     window.onload = async () => {
         await initializeCategories();
@@ -258,6 +321,8 @@
         }
     };
 </script>
+
+
 
 <style>
 #default-modal.opacity-0 {
