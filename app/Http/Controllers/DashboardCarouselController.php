@@ -23,10 +23,10 @@ class DashboardCarouselController extends Controller
     public function store(Request $request) {
         $validated = $request->validate([
             'title' => 'required|max:255',
-            'file' => 'image|mimes:jpeg,png,jpg|max:10000'
+            'file' => 'image|mimes:jpeg,png,jpg|max:5120'
         ], [
             'file.mimes' => 'The file must be a valid image file (jpeg, png, jpg)',
-            'file.max' => 'The file size must not exceed 10MB'
+            'file.max' => 'The file size must not exceed 2MB'
         ]);
 
         $result = null;
@@ -58,7 +58,7 @@ class DashboardCarouselController extends Controller
             'file' => 'image|mimes:jpeg,png,jpg|max:5120'
         ], [
             'file.mimes' => 'The file must be a valid image file (jpeg, png, jpg)',
-            'file.max' => 'The file size must not exceed 5MB'
+            'file.max' => 'The file size must not exceed 2MB'
         ]);
 
         $carousel = Carousel::findOrFail($id);
