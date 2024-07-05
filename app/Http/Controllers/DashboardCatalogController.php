@@ -13,10 +13,12 @@ use Illuminate\Support\Facades\Log;
 
 class DashboardCatalogController extends Controller
 {
-    public function index() {
-        $catalogs = Catalog::with('category:id,name')->get();
+    public function index(Request $request) {
+        $total = $request->query('total', 10);
+        $catalogs = Catalog::with('category:id,name')->paginate($total);
         return CatalogResource::collection($catalogs);
     }
+
 
     public function show($id) {
         $catalog = Catalog::with(['author:id,email,username', 'category:id,name'])->findOrFail($id);
@@ -154,7 +156,7 @@ class DashboardCatalogController extends Controller
     }
 
     public function filter(Request $request) {
-        $request->validate([
+        $validated = $request->validate([
             'category' => 'required|string'
         ]);
 
@@ -164,15 +166,16 @@ class DashboardCatalogController extends Controller
             return response()->json(['error' => 'Category not found'], 404);
         }
 
+        $total = $request->query('total', 10);
         $catalogs = Catalog::with('category:id,name')
             ->where('category_id', $category->id)
-            ->get();
+            ->paginate($total);
 
         return CatalogResource::collection($catalogs);
     }
 
     public function search(Request $request) {
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'nullable|string|max:255',
         ]);
 
@@ -182,7 +185,8 @@ class DashboardCatalogController extends Controller
             $query->where('title', 'LIKE', '%' . $request->title . '%');
         }
 
-        $catalogs = $query->get();
+        $total = $request->query('total', 10);
+        $catalogs = $query->paginate($total);
 
         return CatalogResource::collection($catalogs);
     }

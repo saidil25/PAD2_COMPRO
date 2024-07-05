@@ -10,8 +10,9 @@ use Illuminate\Http\Request;
 
 class CatalogController extends Controller
 {
-    public function index() {
-        $catalogs = Catalog::with('category:id,name')->get();
+    public function index(Request $request) {
+        $total = $request->query('total', 10);
+        $catalogs = Catalog::with('category:id,name')->paginate($total);
         return CatalogResource::collection($catalogs);
     }
 
