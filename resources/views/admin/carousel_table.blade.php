@@ -3,7 +3,7 @@
 @section('admin_content')
 <div class="m-6">
     <div class="bg-white shadow-md rounded-lg overflow-hidden">
-        <div class="p-6">
+        <div class="p-6 overflow-x-auto">
             <table id="dataTable" class="w-full text-sm text-center text-gray-500 dark:text-gray-400 border-collapse">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
@@ -46,8 +46,8 @@
             const imageUrl = item.image ? `http://127.0.0.1:8000/storage/image/${item.image}` : '';
 
             row.innerHTML = `
-                <td class="px-6 py-4 w-64 border-b">${item.title}</td>
-                <td class="px-6 py-4 border-b">${imageUrl ? `<img src="${imageUrl}" alt="${item.title}" class="w-full h-64 object-cover mx-auto">` : 'No Image'}</td>
+                <td class="px-6 py-4 w-96 text-sm border-b">${item.title}</td>
+                <td class="px-6 py-4 border-b">${imageUrl ? `<img src="${imageUrl}" alt="${item.title}" class="w-full h-full object-cover mx-auto">` : 'No Image'}</td>
                 <td class="px-6 py-4 text-right border-b"><a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" onclick="editItem(${item.id})">Edit</a></td>
                 <td class="px-6 py-4 text-right border-b"><a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline" onclick="deleteItem(${item.id})">Delete</a></td>
             `;
