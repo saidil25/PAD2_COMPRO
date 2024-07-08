@@ -7,7 +7,7 @@
             <table id="dataTable" class="w-full text-sm text-center text-gray-500 dark:text-gray-400 border-collapse">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
-                        <th scope="col" class="px-6 py-3 border-b">Title</th>
+                        <th scope="col" class="px-6 py-3 border-b ">Title</th>
                         <th scope="col" class="px-6 py-3 border-b">Image</th>
                         <th scope="col" class="px-6 py-3 border-b"></th>
                         <th scope="col" class="px-6 py-3 border-b"><a href="/carouselform" class="bg-coklat hover:bg-krem hover:text-coklat text-white font-bold py-2 px-4 rounded">Tambah</a></th>
