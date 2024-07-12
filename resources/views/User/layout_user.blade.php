@@ -73,7 +73,7 @@
       <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-10">
         <div class="col-span-2 md:col-span-1 flex justify-center md:ml-10">
           <div class="lg:w-384 md:w-384 lg:mt-20 md:mt-16 sm:mt-3">
-            <h2 class="text-krem lg:text-3xl md:text-3xl sm:text-3xl xm:text-3xl font-bold mb-4 xxm:text-sm uppercase">ATHAMEBEL</h2>
+            <h2 class="text-krem lg:text-3xl md:text-3xl sm:text-3xl xm:text-sm font-bold mb-4 xxm:text-sm uppercase">ATHAMEBEL</h2>
             <ul class="text-krem">
               <!-- <li class="mb-2">
                 <a href="" class="lg:text-lg md:text-14">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et massa mi. Aliquam in hendrerit urna. Pellentesque sit amet sapien fringilla, mattis ligula consectetur, ultrices mauris. Maecenas vitae mattis tellus. Nullam quis imperdiet augue. Vestibulum auctor ornare leo, non suscipit magna interdum eu.</a>
@@ -83,12 +83,12 @@
         </div>
         <div class="flex justify-center lg:ml-12 md:ml-12 sm:ml-0 xm:ml-10 xxm:ml-10">
           <div>
-            <h2 class="text-krem lg:text-lg md:text-lg sm:text-lg xm:text-lg xxm:text-xs font-semibold mb-4 uppercase">Atha Mebel</h2>
+            <h2 class="text-krem lg:text-lg md:text-lg sm:text-lg xm:text-sm xxm:text-xs font-semibold mb-4 uppercase">Atha Mebel</h2>
             <ul class="text-krem">
-              <li class="mb-2 lg:text-lg md:text-14 sm:text-lg xm:text-lg xxm:text-xs">
+              <li class="mb-2 lg:text-lg md:text-14 sm:text-lg xm:text-sm xxm:text-xs">
                 <a href="#" class="">Jawa Tengah<br>Paesan, Mireng, Trucuk, Klaten</a>
               </li>
-              <li class="mb-2 mt-3 lg:text-lg md:text-14 sm:text-lg xm:text-lg xxm:text-xs">
+              <li class="mb-2 mt-3 lg:text-lg md:text-14 sm:text-lg xm:text-sm xxm:text-xs">
                 <a href="#" class="">Email : athaya040716@gmail.com<br>Phone : 0895352224863</a>
               </li>
               <li class="mb-2 flex mt-3 lg:text-lg md:text-14 ">
@@ -110,8 +110,8 @@
         </div>
         <div class="flex justify-center">
           <div>
-            <h2 class="text-krem lg:text-lg md:text-14 sm:text-lg xm:text-lg xxm:text-xs font-semibold mb-4 uppercase">marketplace</h2>
-            <ul class="text-krem font-medium lg:text-lg md:text-14 sm:text-lg xm:text-lg xxm:text-xs">
+            <h2 class="text-krem lg:text-lg md:text-14 sm:text-lg xm:text-sm xxm:text-xs font-semibold mb-4 uppercase">marketplace</h2>
+            <ul class="text-krem font-medium lg:text-lg md:text-14 sm:text-lg xm:text-sm xxm:text-xs">
               <li class="mb-2">
                 <a href="https://shopee.co.id/athaya040716" class=" hover:underline">Shopee</a>
               </li>
