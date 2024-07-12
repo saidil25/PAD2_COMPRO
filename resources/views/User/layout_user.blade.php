@@ -17,7 +17,7 @@
 </head>
 <body class="relative">
   <!--navbar-->
- <nav class="pt-9 pb-4 px-4 pl-12 fixed top-0 lg:w-full md:w-full sm:w-full bg-white z-10">
+ <nav class="pt-9 pb-4 px-4 pl-12 fixed top-0 lg:w-full md:w-full sm:w-full xm:w-full bg-white z-10">
     <div class="container flex justify-between items-center">
         <div class="flex items-center"> <!-- Mengubah class flex menjadi flex items-center -->
             <div class="md:hidden block mr-4"> <!-- Memindahkan ikon menu ke paling kiri -->
@@ -81,7 +81,7 @@
             </ul>
           </div>
         </div>
-        <div class="flex justify-center lg:ml-12 md:ml-12 sm:ml-0">
+        <div class="flex justify-center lg:ml-12 md:ml-12 sm:ml-0 xm:ml-10">
           <div>
             <h2 class="text-krem text-lg font-semibold mb-4 uppercase">Atha Mebel</h2>
             <ul class="text-krem">
