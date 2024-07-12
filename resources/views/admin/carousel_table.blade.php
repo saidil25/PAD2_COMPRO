@@ -23,12 +23,13 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    const BASE_URL = "{{ config('app.base_url') }}";
     document.addEventListener('DOMContentLoaded', () => {
         fetchData();
     });
 
     function fetchData() {
-        fetch('http://127.0.0.1:8000/api/carousel')
+        fetch(`${BASE_URL}/api/carousel`)
             .then(response => response.json())
             .then(data => populateTable(data.data))
             .catch(error => console.error('Error fetching data:', error));
@@ -43,7 +44,7 @@
             row.className = 'bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600';
 
             // Construct the image URL
-            const imageUrl = item.image ? `http://127.0.0.1:8000/storage/image/${item.image}` : '';
+            const imageUrl = item.image ? `${BASE_URL}/storage/image/${item.image}` : '';
 
             row.innerHTML = `
                 <td class="px-6 py-4 w-96 text-sm border-b">${item.title}</td>
@@ -73,7 +74,7 @@
             if (result.isConfirmed) {
                 const token = localStorage.getItem('authToken'); // Ambil token dari local storage atau cookie
 
-                fetch(`http://127.0.0.1:8000/api/dashboard/carousel/${id}`, {
+                fetch(`${BASE_URL}/api/dashboard/carousel/${id}`, {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',

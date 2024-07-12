@@ -56,6 +56,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    const BASE_URL = "{{ config('app.base_url') }}";
     document.addEventListener('DOMContentLoaded', () => {
         initializeCategories();
         fetchData();
@@ -78,19 +79,19 @@
     });
 
     async function fetchCategories() {
-        const response = await fetch('http://127.0.0.1:8000/api/categories');
+        const response = await fetch(`${BASE_URL}/api/categories`);
         const data = await response.json();
         return data.data;
     }
 
    async function fetchData(category = null, searchQuery = '', page = 1, limit = 10) {
     const token = localStorage.getItem('authToken'); 
-    let url = `http://127.0.0.1:8000/api/dashboard/catalogs?page=${page}&limit=${limit}`;
+    let url = `${BASE_URL}/api/dashboard/catalogs?page=${page}&limit=${limit}`;
     if (category) {
-        url = `http://127.0.0.1:8000/api/admin/filter?category=${category}&page=${page}&limit=${limit}`;
+        url = `${BASE_URL}/api/admin/filter?category=${category}&page=${page}&limit=${limit}`;
     }
     if (searchQuery) {
-        url = `http://127.0.0.1:8000/api/admin/search?title=${encodeURIComponent(searchQuery)}&page=${page}&limit=${limit}`;
+        url = `${BASE_URL}/api/admin/search?title=${encodeURIComponent(searchQuery)}&page=${page}&limit=${limit}`;
     }
 
     try {
@@ -149,7 +150,7 @@
             row.setAttribute('data-id', item.id); // Store item ID as data attribute
 
             // Construct the image URL
-            const imageUrl = item.image ? `http://127.0.0.1:8000/storage/image/${item.image}` : '';
+            const imageUrl = item.image ? `${BASE_URL}/storage/image/${item.image}` : '';
 
             row.innerHTML = `
                 <td class="px-6 py-4 border-b">${item.title}</td>
@@ -229,7 +230,7 @@
             if (result.isConfirmed) {
                 const token = localStorage.getItem('authToken'); 
 
-                fetch(`http://127.0.0.1:8000/api/dashboard/catalogs/${id}`, {
+                fetch(`${BASE_URL}/api/dashboard/catalogs/${id}`, {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',

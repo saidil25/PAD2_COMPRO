@@ -14,12 +14,13 @@
   <!-- Tailwind CSS -->
   @vite('resources/css/app.css')
   <script>
+    const BASE_URL = "{{ config('app.base_url') }}";
     async function login() {
       var email = document.getElementById("email").value;
       var password = document.getElementById("pass").value;
 
       try {
-        const response = await fetch('http://127.0.0.1:8000/api/login', {
+        const response = await fetch(`${BASE_URL}/api/login`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

@@ -59,6 +59,8 @@ return [
 
     'asset_url' => env('ASSET_URL'),
 
+    'base_url' => env('BASE_URL', 'http://127.0.0.1:8000'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

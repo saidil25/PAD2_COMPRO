@@ -3,7 +3,7 @@
 @section('admin_content')
     <h1 class="text-3xl font-bold text-coklat mb-2 text-center">Carousel Form</h1>
     <div class="w-full h-auto mt-10 flex flex-col items-center p-6 justify-center bg-white border border-gray-200 rounded-lg shadow">
-        <form action="http://127.0.0.1:8000/dashboard/carousel" method="POST" enctype="multipart/form-data" class="w-full" id="carousel-form">
+        <form action="${BASE_URL}/dashboard/carousel" method="POST" enctype="multipart/form-data" class="w-full" id="carousel-form">
             @csrf
             <!-- Hidden input for carousel ID -->
             <input type="hidden" id="carousel-id" name="carousel_id" value="{{ isset($carousel) ? $carousel->id : '' }}">
@@ -29,7 +29,8 @@
     </div>
 
     <script>
-   document.addEventListener('DOMContentLoaded', function () {
+    const BASE_URL = "{{ config('app.base_url') }}";
+    document.addEventListener('DOMContentLoaded', function () {
     const getAuthToken = () => {
         return localStorage.getItem('authToken');
     };
@@ -54,7 +55,7 @@
     // If editing, populate the form with existing carousel data
     const carouselId = '{{ isset($carousel) ? $carousel->id : '' }}';
     if (carouselId) {
-        fetch(`http://127.0.0.1:8000/api/dashboard/carousel/${carouselId}`, {
+        fetch(`${BASE_URL}/api/dashboard/carousel/${carouselId}`, {
             headers: {
                 'Authorization': `Bearer ${getAuthToken()}`
             }
@@ -84,7 +85,7 @@
         const formData = new FormData(this);
         const carouselId = document.getElementById('carousel-id').value;
 
-        let url = 'http://127.0.0.1:8000/api/dashboard/carousel';
+        let url = `${BASE_URL}/api/dashboard/carousel`;
         let method = 'POST';
 
         if (carouselId) {

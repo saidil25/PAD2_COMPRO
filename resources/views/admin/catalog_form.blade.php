@@ -48,11 +48,12 @@
     </div>
 
     <script>
-document.addEventListener('DOMContentLoaded', function () {
+    const BASE_URL = "{{ config('app.base_url') }}";
+    document.addEventListener('DOMContentLoaded', function () {
     const getAuthToken = () => localStorage.getItem('authToken');
 
     // Fetch categories and populate select options
-    fetch('http://127.0.0.1:8000/api/categories', {
+    fetch(`${BASE_URL}/api/categories`, {
         headers: {
             'Authorization': `Bearer ${getAuthToken()}`
         }
@@ -73,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // If editing, set selected category based on catalog data
             const catalogId = '{{ isset($catalog) ? $catalog->id : '' }}';
             if (catalogId) {
-                fetch(`http://127.0.0.1:8000/api/catalogs/${catalogId}`, {
+                fetch(`${BASE_URL}/api/catalogs/${catalogId}`, {
                     headers: {
                         'Authorization': `Bearer ${getAuthToken()}`
                     }
@@ -140,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             formData.append('category', categoryName);
 
-            let url = 'http://127.0.0.1:8000/api/dashboard/catalogs';
+            let url = `${BASE_URL}/api/dashboard/catalogs`;
             let method = 'POST';
 
             if (catalogId) {

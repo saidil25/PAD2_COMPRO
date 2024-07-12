@@ -3,19 +3,19 @@
 @section('content')
 
 <!-- Carousel -->
-<div class="w-full h-auto ">
+<div class="w-full h-auto">
     <div class="relative" x-data="{
             slides: [],
             currentIndex: 0,
             fetchSlides() {
-                fetch('http://127.0.0.1:8000/api/carousel')
+                fetch(`${BASE_URL}/api/carousel`)
                     .then(response => response.json())
                     .then(data => {
-                        const baseUrl = 'http://127.0.0.1:8000/storage/image/';
+                        const baseUrl = `${BASE_URL}/storage/image/`;
                         this.slides = data.data.map(slide => ({
                             url: baseUrl + slide.image,
                             title: slide.title,
-                            body: ''  // Anda bisa menambahkan body jika ada data tersebut atau biarkan kosong
+                            body: slide.body || ''  // Menambahkan body jika ada, atau biarkan kosong
                         }));
                     })
                     .catch(error => console.error('Error fetching data:', error));
@@ -32,14 +32,14 @@
         }" x-init="fetchSlides(); setInterval(() => nextSlide(), 5000);">
         <div class="mx-auto relative">
             <template x-for="(slide, index) in slides" :key="index">
-                <div x-show="currentIndex === index" class="lg:w-full lg:h-81 lg:bg-cover lg:bg-center md:bg-cover md:bg-center md:h-80 md:w-full sm:bg-cover sm:bg-center sm:w-full sm:h-250 xm:bg-cover xm:bg-center xm:w-full xm:h-170" :style="'background-image: url(\'' + slide.url + '\')'">
+                <div x-show="currentIndex === index" class="lg:w-full lg:h-81 lg:bg-cover lg:bg-center md:bg-cover md:bg-center md:h-80 md:w-full sm:bg-cover sm:bg-center sm:w-full sm:h-250 xm:bg-cover xm:bg-center xm:w-full xm:h-170" :style="'background-image: url(' + slide.url + ')'">
                     <!-- Gradien dan teks ditempatkan di bawah -->
                     <div class="lg:absolute lg:bottom-0 lg:w-full lg:h-81 md:absolute md:bottom-0 md:w-full md:h-80 sm:absolute sm:bottom-0 sm:h-250 sm:w-full xm:absolute xm:bottom-0 xm:h-170 xm:w-full flex items-end justify-center bg-gradient-to-t from-c1 via-c2">
                         <div class="text-center lg:w-1094 md:w-677 sm:w-347 xm:w-315 text-white lg:mb-10 md:mb-7 sm:mb-4 p-4">
                             <h2 class="lg:text-xl md:text-sm sm:text-10 xm:text-7 mb-2" x-text="slide.title"></h2>
                             <p class="lg:text-17 md:text-10" x-text="slide.body"></p>
                         </div>
-                    </div> 
+                    </div>
                 </div>
             </template>
             <div class="absolute w-32 items-center justify-center left-1/2 transform -translate-x-1/2 flex space-x-2 px-4">
@@ -48,9 +48,8 @@
                 </template>
             </div>
         </div>
-
+    </div>
 </div>
-
 
 <!-- Kelebihan -->
 <div id="kelebihan" class="w-full h-auto mt-16 flex flex-col items-center justify-center">
@@ -144,11 +143,12 @@
 </div>
 
 <script>
-    let currentCategory = null;
+   let currentCategory = null;
+    const BASE_URL = "{{ config('app.base_url') }}";
 
     async function fetchCategories() {
         try {
-            const response = await fetch('http://127.0.0.1:8000/api/categories');
+            const response = await fetch(`${BASE_URL}/api/categories`);
             const data = await response.json();
             return data.data;
         } catch (error) {
@@ -158,9 +158,9 @@
 
     async function fetchData(category = null, page = 1) {
         try {
-            let url = `http://127.0.0.1:8000/api/catalogs?page=${page}`;
+            let url = `${BASE_URL}/api/catalogs?page=${page}`;
             if (category) {
-                url = `http://127.0.0.1:8000/api/catalogs/filter?category=${category}&page=${page}`;
+                url = `${BASE_URL}/api/catalogs/filter?category=${category}&page=${page}`;
             }
             const response = await fetch(url);
             const data = await response.json();
@@ -194,12 +194,12 @@
     function createCard(title, image, category, description) {
         const container = document.getElementById('catalog-container');
         const button = document.createElement('button');
-        button.className = 'max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 lg:h-72 lg:w-96 md:w-347 md:h-250 sm:w-247 sm:h-192 xm:w-170 xm:h-130 mb-5';
-        button.onclick = () => openModal(title, `http://127.0.0.1:8000/storage/image/${image}`, description);
+        button.className = 'max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 lg:h-72 lg:w-96 md:w-347 md:h-250 sm:w-247 sm:h-192 xm:w-170 xm:h-160 mb-5';
+        button.onclick = () => openModal(title, `${BASE_URL}/storage/image/${image}`, description);
 
         button.innerHTML = `
             <a>
-                <img class="rounded-t-lg lg:h-203 md:h-170 sm:h-110 lg:w-385 md:w-345 sm:w-220 xm:w-170 xm:h-130" src="http://127.0.0.1:8000/storage/image/${image}" alt="" />
+                <img class="rounded-t-lg lg:h-203 md:h-170 sm:h-110 lg:w-385 md:w-345 sm:w-220 xm:w-220 xm:h-90" src="${BASE_URL}/storage/image/${image}" alt="" />
             </a>
             <div class="p-5">
                 <h4 class="lg:text-15 md:text-15 font-medium sm:text-sm xm:text-10 text-coklat mr-auto text-left">${category}</h4>
