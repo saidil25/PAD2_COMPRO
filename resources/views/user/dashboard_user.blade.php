@@ -97,7 +97,7 @@
 <div id="catalog" class="w-full h-auto mt-10 flex flex-col items-center justify-center bg-choco bg-opacity-50">
     <h1 class="lg:text-3xl md:text-2xl sm:text-xl xm:text-xl xxm:text-sm font-bold text-coklat mt-10">KATALOG</h1>
 
-    <div id="category-buttons-container" class="mt-3 overflow-y-auto overflow-x-auto w-full lg:w-1094 md:w-677 sm:w-384 xm:w-247 xxm:w-247">
+    <div id="category-buttons-container" class="mt-3 overflow-y-auto overflow-x-auto w-full lg:w-1094 md:w-677 sm:w-384 xm:w-315 xxm:w-247">
         <div id="category-buttons" class="flex gap-5 mt-3 sm:hidden lg:block md:block">
             <!-- Dynamic category buttons will be inserted here -->
         </div>
