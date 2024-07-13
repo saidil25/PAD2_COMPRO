@@ -12,7 +12,7 @@ export default {
         "montserrat" : ['montserrat']
       },
       screens: {
-        'sm': '427px',
+        'sm': '431px',
         'dm' : '524px',
         'xm' : '320px',
         'xxm' : '200px'
